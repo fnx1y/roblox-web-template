@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CLPD Portal</title>
+<title>CLPD Secure Portal</title>
 
-<link rel="icon" href="/CLPD.png?v=5">
+<link rel="icon" href="/CLPD.png?v=7">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -15,222 +15,145 @@
 
 body{
 font-family:'Inter',sans-serif;
-display:flex;
 height:100vh;
-color:rgba(255,255,255,0.75);
-background:linear-gradient(135deg,#0a0f1f,#1a2a55,#0a0f1f);
-}
-
-/* SIDEBAR */
-.sidebar{
-width:260px;
-background:#1b1e2a;
-padding:20px;
-}
-
-.sidebar h2{
-font-size:12px;
-opacity:.6;
-margin-bottom:10px;
-}
-
-.nav-btn{
-padding:10px;
-margin-bottom:5px;
-border-radius:8px;
-cursor:pointer;
-transition:.2s;
-}
-.nav-btn:hover{background:rgba(255,255,255,0.08);}
-.nav-btn.active{background:rgba(100,150,255,0.3);}
-
-/* MAIN */
-.main{
-flex:1;
-padding:30px;
-overflow-y:auto;
-}
-
-/* HEADER */
-.header{
 display:flex;
-justify-content:space-between;
+justify-content:center;
 align-items:center;
-margin-bottom:20px;
+color:white;
+
+/* YOUR GIF BACKGROUND */
+background:url("waves.gif") center/cover no-repeat fixed;
 }
 
-.header-left{
-display:flex;
-align-items:center;
-gap:10px;
+/* OVERLAY */
+.overlay{
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,40,0.6);
+backdrop-filter:blur(6px);
 }
 
-.header img{
-width:45px;
-border-radius:50%;
+/* LOGIN BOX */
+.login-box{
+position:relative;
+z-index:2;
+background:rgba(10,20,60,0.6);
+padding:40px;
+border-radius:16px;
+width:350px;
+text-align:center;
+box-shadow:0 0 40px rgba(0,0,0,0.7);
 }
 
-.rank-display{
-background:rgba(255,255,255,0.1);
-padding:8px 12px;
-border-radius:8px;
-font-size:14px;
-}
-
-/* CARD */
-.card{
-background:rgba(255,255,255,0.05);
-padding:20px;
-border-radius:12px;
+/* TITLE */
+.title{
+font-family:'Orbitron';
+font-size:20px;
 margin-bottom:15px;
 }
 
-/* PAGES */
-.page{display:none;}
-.page.active{display:block;}
-
-/* LOGIN */
-.login-box input{
-padding:10px;
+/* INPUT */
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
 border:none;
-border-radius:6px;
-margin-right:10px;
+border-radius:8px;
+background:rgba(255,255,255,0.1);
+color:white;
 }
+
+/* BUTTON */
 button{
-padding:10px 14px;
+margin-top:15px;
+width:100%;
+padding:12px;
 border:none;
-border-radius:6px;
-background:#5b7cff;
+border-radius:8px;
+background:#4d6aff;
 color:white;
 cursor:pointer;
 }
 
-/* PUNISHMENT TABLE */
-.table{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
-
-.badge{
-display:inline-block;
-padding:5px 8px;
-border-radius:6px;
-background:#4d6aff;
-margin-right:5px;
+/* RESULT */
+.result{
+margin-top:15px;
+font-size:14px;
+opacity:0.8;
 }
 </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-<h2>PAGES</h2>
+<div class="overlay"></div>
 
-<div class="nav-btn active" onclick="showPage('home')">🏠 Home</div>
-<div class="nav-btn" onclick="showPage('rules')">📜 Rules</div>
-<div class="nav-btn" onclick="showPage('chain')">🧭 Chain</div>
-<div class="nav-btn" onclick="showPage('ranks')">📊 Ranks</div>
-<div class="nav-btn" onclick="showPage('punishments')">📌 Punishments</div>
-<div class="nav-btn" onclick="showPage('login')">🔐 Login</div>
-</div>
+<div class="login-box">
+<div class="title">CLPD Secure Access</div>
 
-<div class="main">
+<input id="username" placeholder="Roblox Username">
 
-<div class="header">
-<div class="header-left">
-<img src="/CLPD.png">
-<h2>Central London Police Department</h2>
-</div>
-<div class="rank-display" id="rankBox">Not Logged In</div>
-</div>
+<button onclick="login()">Authenticate</button>
 
-<!-- HOME -->
-<div id="home" class="page active">
-<div class="card">
-<p>
-Central London Police Department is a structured law enforcement environment designed to enforce realism,
-discipline, and professionalism. This system ensures all players operate within a controlled hierarchy.
-</p>
-</div>
-</div>
-
-<!-- RULES -->
-<div id="rules" class="page">
-<div class="card">
-<b>Professional Conduct</b><br>
-All members must act professionally at all times. Any form of immaturity, trolling, or disruption
-will be handled strictly.<br><br>
-
-<b>Respect</b><br>
-All players must be treated equally. Harassment, targeting, or toxicity is prohibited.<br><br>
-
-<b>Language</b><br>
-Offensive language or bypassing filters is not allowed.<br><br>
-
-<b>Exploiting</b><br>
-Cheating results in immediate bans.<br><br>
-
-<b>Authority</b><br>
-Failure to follow higher rank instructions will result in punishment.
-</div>
-</div>
-
-<!-- CHAIN -->
-<div id="chain" class="page">
-<div class="card">
-<b>Chain of Command</b><br><br>
-PO → SUPT → D/INS → INS → DC → AC → CH → Ownership<br><br>
-
-All issues must follow this path. Skipping ranks is prohibited unless necessary.
-</div>
-</div>
-
-<!-- RANKS -->
-<div id="ranks" class="page">
-<div class="card">
-<b>Low Ranks:</b> Patrol, respond, follow orders<br><br>
-<b>Middle Ranks:</b> Supervise, assist command<br><br>
-<b>High Ranks:</b> Manage divisions<br><br>
-<b>Chief:</b> Lead entire department<br><br>
-<b>Ownership:</b> Full control
-</div>
-</div>
-
-<!-- PUNISHMENTS -->
-<div id="punishments" class="page">
-<div class="card">
-<div class="table">
-<div><b>RDM</b></div><div><span class="badge">K</span></div>
-<div><b>VDM</b></div><div><span class="badge">W1</span><span class="badge">K</span></div>
-<div><b>FRP</b></div><div><span class="badge">K</span></div>
-<div><b>NLR</b></div><div><span class="badge">W1</span><span class="badge">K</span></div>
-<div><b>Trolling</b></div><div><span class="badge">W1</span><span class="badge">K</span></div>
-</div>
-</div>
-</div>
-
-<!-- LOGIN -->
-<div id="login" class="page">
-<div class="card login-box">
-<input id="userInput" placeholder="Enter Username">
-<button onclick="login()">Login</button>
-</div>
-</div>
-
+<div class="result" id="result"></div>
 </div>
 
 <script>
-function showPage(id){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-event.target.classList.add('active');
+async function login(){
+
+let username = document.getElementById("username").value;
+let result = document.getElementById("result");
+
+result.innerText = "Authenticating...";
+
+/* STEP 1: GET USER ID */
+let userRes = await fetch("https://users.roblox.com/v1/usernames/users",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+"usernames":[username],
+"excludeBannedUsers":true
+})
+});
+
+let userData = await userRes.json();
+
+if(!userData.data.length){
+result.innerText = "Invalid username.";
+return;
 }
 
-function login(){
-let user=document.getElementById("userInput").value;
-document.getElementById("rankBox").innerText=user+" | Rank: Unknown";
+let userId = userData.data[0].id;
+
+/* STEP 2: GET GROUP RANK */
+let groupId = 342605681;
+
+let rankRes = await fetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
+let rankData = await rankRes.json();
+
+let group = rankData.data.find(g=>g.group.id===groupId);
+
+if(!group){
+result.innerText = "User not in CLPD group.";
+return;
+}
+
+let rankName = group.role.name;
+
+/* DISPLAY */
+result.innerText = `${username} | Rank: ${rankName}`;
+
+/* SEND TO GOOGLE SCRIPT */
+fetch("YOUR_SCRIPT_URL",{
+method:"POST",
+body:JSON.stringify({
+username:username,
+userId:userId,
+rank:rankName
+})
+});
+
 }
 </script>
 
