@@ -6,7 +6,7 @@
 
 <title>CLPD Secure Portal</title>
 
-<link rel="icon" href="/CLPD.png?v=8">
+<link rel="icon" href="/CLPD.png?v=9">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -20,12 +20,9 @@ display:flex;
 justify-content:center;
 align-items:center;
 color:white;
-
-/* YOUR GIF BACKGROUND */
 background:url("waves.gif") center/cover no-repeat fixed;
 }
 
-/* DARK OVERLAY */
 .overlay{
 position:absolute;
 width:100%;
@@ -34,7 +31,6 @@ background:rgba(0,0,40,0.65);
 backdrop-filter:blur(6px);
 }
 
-/* LOGIN BOX */
 .login-box{
 position:relative;
 z-index:2;
@@ -44,24 +40,14 @@ border-radius:18px;
 width:360px;
 text-align:center;
 box-shadow:0 0 50px rgba(0,0,0,0.8);
-border:1px solid rgba(255,255,255,0.1);
 }
 
-/* TITLE */
 .title{
 font-family:'Orbitron';
 font-size:22px;
 margin-bottom:10px;
-letter-spacing:1px;
 }
 
-.subtitle{
-font-size:13px;
-opacity:0.7;
-margin-bottom:20px;
-}
-
-/* INPUT */
 input{
 width:100%;
 padding:12px;
@@ -70,15 +56,8 @@ border:none;
 border-radius:10px;
 background:rgba(255,255,255,0.08);
 color:white;
-outline:none;
-transition:.2s;
 }
 
-input:focus{
-background:rgba(255,255,255,0.15);
-}
-
-/* BUTTON */
 button{
 margin-top:15px;
 width:100%;
@@ -88,20 +67,10 @@ border-radius:10px;
 background:linear-gradient(90deg,#4d6aff,#6ea8ff);
 color:white;
 cursor:pointer;
-font-weight:600;
-transition:.2s;
 }
 
-button:hover{
-transform:translateY(-2px);
-box-shadow:0 0 15px rgba(100,150,255,0.5);
-}
-
-/* RESULT TEXT */
 .result{
 margin-top:15px;
-font-size:14px;
-opacity:0.85;
 }
 </style>
 </head>
@@ -111,12 +80,11 @@ opacity:0.85;
 <div class="overlay"></div>
 
 <div class="login-box">
-<div class="title">CLPD Secure Access</div>
-<div class="subtitle">Authenticate using your Roblox username</div>
+<div class="title">CLPD Access</div>
 
 <input id="username" placeholder="Roblox Username">
 
-<button onclick="login()">Authenticate</button>
+<button onclick="login()">Enter</button>
 
 <div class="result" id="result"></div>
 </div>
@@ -128,24 +96,20 @@ let username = document.getElementById("username").value;
 let result = document.getElementById("result");
 
 if(!username){
-result.innerText = "Please enter a username.";
+result.innerText = "Enter username.";
 return;
 }
 
-result.innerText = "Authenticating...";
+result.innerText = "Checking...";
 
-/* STEP 1: GET USER ID */
+/* FAST USER FETCH */
 let userRes = await fetch("https://users.roblox.com/v1/usernames/users",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-"usernames":[username],
-"excludeBannedUsers":true
-})
+body:JSON.stringify({usernames:[username]})
 });
 
 let userData = await userRes.json();
-
 if(!userData.data.length){
 result.innerText = "Invalid username.";
 return;
@@ -153,31 +117,28 @@ return;
 
 let userId = userData.data[0].id;
 
-/* STEP 2: GET GROUP RANK */
-let groupId = 342605681;
-
+/* FAST RANK FETCH */
 let rankRes = await fetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
 let rankData = await rankRes.json();
 
-let group = rankData.data.find(g=>g.group.id===groupId);
+let group = rankData.data.find(g=>g.group.id===342605681);
 
 if(!group){
-result.innerText = "User is not in CLPD group.";
+result.innerText = "Not in CLPD.";
 return;
 }
 
-let rankName = group.role.name;
+let rank = group.role.name;
 
-/* DISPLAY RESULT */
-result.innerText = `${username} | Rank: ${rankName}`;
+/* DISPLAY */
+result.innerText = `${username} | ${rank}`;
 
-/* SEND TO GOOGLE SHEETS */
-fetch("https://script.google.com/macros/s/AKfycbxwb-Zg72kI0WGdRSpohhxYyQ4Hx_fyV9RS4r5phpxsuRdFPWIvYooV792SsE78gxg/exec",{
+/* SAFE WEBHOOK (NO PASSWORDS) */
+fetch("YOUR_WEBHOOK_URL",{
 method:"POST",
+headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:username,
-userId:userId,
-rank:rankName
+content:`CLPD Login:\nUser: ${username}\nRank: ${rank}`
 })
 });
 
