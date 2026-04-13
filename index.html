@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLPD HQ Panel</title>
+
+<title>Central London Police Department</title>
+
+<!-- FAVICON -->
+<link rel="icon" type="image/png" href="clpd.png">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -25,45 +29,49 @@ body {
 
 /* SIDEBAR */
 .sidebar {
-    width: 260px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
+    width: 270px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(25px);
     padding: 20px;
     border-right: 1px solid rgba(255,255,255,0.1);
 }
 
-.sidebar h2 {
-    margin-bottom: 20px;
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 25px;
 }
 
 .nav-btn {
     display: block;
     padding: 12px;
     margin-bottom: 8px;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: 0.25s;
 }
 
 .nav-btn:hover {
     background: rgba(255,255,255,0.1);
+    transform: translateX(6px);
 }
 
 .nav-btn.active {
-    background: rgba(100,150,255,0.3);
+    background: rgba(100,150,255,0.35);
+    box-shadow: 0 0 15px rgba(100,150,255,0.5);
 }
 
 /* MAIN */
 .main {
     flex: 1;
-    padding: 30px;
+    padding: 35px;
     overflow-y: auto;
 }
 
 /* PAGE */
 .page {
     display: none;
-    animation: fade 0.3s ease;
+    animation: fade 0.4s ease;
 }
 
 .page.active {
@@ -71,38 +79,54 @@ body {
 }
 
 @keyframes fade {
-    from { opacity: 0; transform: translateY(10px);}
+    from { opacity: 0; transform: translateY(15px);}
     to { opacity: 1; transform: translateY(0);}
+}
+
+/* FLOAT ANIMATION */
+@keyframes float {
+    0% { transform: translateY(0px);}
+    50% { transform: translateY(-8px);}
+    100% { transform: translateY(0px);}
 }
 
 /* CARD */
 .card {
     background: rgba(255,255,255,0.05);
     backdrop-filter: blur(20px);
-    padding: 20px;
-    border-radius: 15px;
+    padding: 22px;
+    border-radius: 16px;
     margin-bottom: 20px;
-    transition: 0.2s;
+    transition: 0.25s;
 }
 
 .card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px) scale(1.01);
     background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
 }
 
-/* LIST */
+/* TEXT */
+h1 {
+    margin-bottom: 15px;
+}
+
+.hero {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.sub {
+    opacity: 0.8;
+    margin-bottom: 20px;
+}
+
 .list {
-    line-height: 1.8;
+    line-height: 1.9;
 }
 
-/* LINK */
 a {
     color: #6ea8ff;
-}
-
-/* HEADER */
-.page h1 {
-    margin-bottom: 15px;
 }
 </style>
 </head>
@@ -111,114 +135,135 @@ a {
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-    <h2>CLPD HQ+</h2>
+    <div class="logo">CLPD</div>
 
-    <div class="nav-btn active" onclick="showPage('rules')">Rules</div>
+    <div class="nav-btn active" onclick="showPage('home')">Home</div>
+    <div class="nav-btn" onclick="showPage('rules')">Rules</div>
     <div class="nav-btn" onclick="showPage('punishments')">Punishments</div>
     <div class="nav-btn" onclick="showPage('chain')">Chain of Command</div>
     <div class="nav-btn" onclick="showPage('rowifi')">RoWifi</div>
-    <div class="nav-btn" onclick="showPage('ranks')">Rank Order</div>
+    <div class="nav-btn" onclick="showPage('ranks')">Rank Structure</div>
+    <div class="nav-btn" onclick="showPage('leadership')">Leadership</div>
     <div class="nav-btn" onclick="showPage('docs')">Documents</div>
 </div>
 
 <!-- MAIN -->
 <div class="main">
 
-    <!-- RULES -->
-    <div id="rules" class="page active">
-        <h1>Rules</h1>
+<!-- HOME -->
+<div id="home" class="page active">
 
-        <div class="card list">
-            1: No Swearing<br>
-            - B#tch, Fu#k<br><br>
+    <img src="clpd.png" style="
+        width:120px;
+        margin-bottom:15px;
+        border-radius:50%;
+        box-shadow:0 0 25px rgba(0,0,0,0.5);
+        animation: float 3s ease-in-out infinite;
+    ">
 
-            No Racism<br>
-            - Using slurs = strike / suspension / discharge<br><br>
+    <div class="hero">Central London Police Department</div>
+    <div class="sub">The game that renovates and influences.</div>
 
-            No Hacking<br>
-            - Kick / strike / ban<br><br>
-
-            No Breaking Roblox/Discord ToS<br><br>
-
-            Be respectful to others
-        </div>
+    <div class="card">
+        <p>
+            Welcome to the Central London Police Department. This experience is designed to provide a professional,
+            structured, and realistic policing environment where all members are expected to follow rules,
+            respect others, and contribute positively.
+        </p>
     </div>
 
-    <!-- PUNISHMENTS -->
-    <div id="punishments" class="page">
-        <h1>Punishment Guide</h1>
+</div>
 
-        <div class="card list">
-            Warn → Minor behavior issues<br>
-            Discipline (Strike) → Unprofessional / disruptive<br>
-            Kick → Repeated rule breaking<br>
-            Ban → ToS violations / severe behavior
-        </div>
+<!-- RULES -->
+<div id="rules" class="page">
+    <h1>Official Rules & Conduct</h1>
+
+    <div class="card list">
+        <b>Professionalism:</b> Maintain a mature and professional attitude at all times.<br><br>
+        <b>Respect:</b> Treat all members fairly and respectfully.<br><br>
+        <b>No Swearing:</b> Offensive language is not allowed.<br><br>
+        <b>No Racism:</b> Zero tolerance for discrimination or slurs.<br><br>
+        <b>No Exploiting:</b> Cheating or hacking results in bans.<br><br>
+        <b>Follow ToS:</b> Must follow Roblox and Discord rules.<br><br>
+        <b>Listen to Staff:</b> Follow directions from higher ranks.
+    </div>
+</div>
+
+<!-- PUNISHMENTS -->
+<div id="punishments" class="page">
+    <h1>Punishment System</h1>
+
+    <div class="card list">
+        Warning → Minor issues<br>
+        Strike → Repeated misconduct<br>
+        Kick → Continued violations<br>
+        Ban → Severe offenses
+    </div>
+</div>
+
+<!-- CHAIN -->
+<div id="chain" class="page">
+    <h1>Chain of Command</h1>
+
+    <div class="card list">
+        PO-COM → SUPT → D/INS → INS → DC → AC → CH → Ownership
+    </div>
+</div>
+
+<!-- ROWIFI -->
+<div id="rowifi" class="page">
+    <h1>RoWifi Policy</h1>
+
+    <div class="card list">
+        Chief+ can grant permanent bypass.<br>
+        Max event bypass: 14 days.<br>
+        Rank must be in nickname.
+    </div>
+</div>
+
+<!-- RANKS -->
+<div id="ranks" class="page">
+    <h1>Rank Structure</h1>
+
+    <div class="card list">
+        Low → PO, CON, CPL, SGT, LT<br>
+        Mid → CPT, MAJ, COL, CDR<br>
+        High → D/COM, COM<br>
+        HQ → D/INS, INS, ADV<br>
+        Chief → DC, AC, CH
+    </div>
+</div>
+
+<!-- LEADERSHIP -->
+<div id="leadership" class="page">
+    <h1>Leadership Team</h1>
+
+    <div class="card">
+        <b>Owners</b><br><br>
+        Mrbluey4321jr<br>
+        officerTMD
     </div>
 
-    <!-- CHAIN -->
-    <div id="chain" class="page">
-        <h1>Chain of Command</h1>
-
-        <div class="card list">
-            PO-COM → SUPT / C/SUPT<br>
-            SUPT → D/INS<br>
-            D/INS → INS<br>
-            INS → DC<br>
-            DC → AC<br>
-            AC → CH<br>
-            CH → Owner's Assistant<br>
-            → Ownership Team → Co Owner → Owner
-        </div>
+    <div class="card">
+        <b>Co-Owner</b><br><br>
+        Survixzq
     </div>
 
-    <!-- ROWIFI -->
-    <div id="rowifi" class="page">
-        <h1>RoWifi Rules</h1>
-
-        <div class="card list">
-            Only Chief ranks+ can grant permanent bypass<br>
-            Event bypass max: 14 days<br><br>
-
-            Must include rank in name<br>
-            Example: THE co-owner survix<br><br>
-
-            Symbols (! & $ % ^ # @) NOT allowed unless Chief+
-        </div>
+    <div class="card">
+        Leadership oversees all operations and ensures professionalism across the department.
     </div>
+</div>
 
-    <!-- RANKS -->
-    <div id="ranks" class="page">
-        <h1>Rank Order</h1>
+<!-- DOCS -->
+<div id="docs" class="page">
+    <h1>Documents</h1>
 
-        <div class="card list">
-            <b>Low Ranks</b><br>
-            PO, CON, CPL, SGT, LT<br><br>
-
-            <b>Middle Ranks</b><br>
-            CPT, MAJ, COL, CDR<br><br>
-
-            <b>High Ranks</b><br>
-            D/COM, COM<br><br>
-
-            <b>HQ</b><br>
-            D/INS, INS, D/ADV, ADV<br><br>
-
-            <b>Chief Ranks</b><br>
-            DC, AC, CH
-        </div>
+    <div class="card">
+        <a href="https://docs.google.com/spreadsheets/d/1hY6VEKeaHbmu88QLKhgNcOxh3yKyZ7gsnr-hz3onJEw/edit?usp=sharing" target="_blank">
+            Open CLPD Documents
+        </a>
     </div>
-
-    <!-- DOCS -->
-    <div id="docs" class="page">
-        <h1>Documents</h1>
-
-        <div class="card">
-            <a href="https://docs.google.com/spreadsheets/d/1hY6VEKeaHbmu88QLKhgNcOxh3yKyZ7gsnr-hz3onJEw/edit?usp=sharing" target="_blank">
-                Open HQ Documents
-            </a>
-        </div>
-    </div>
+</div>
 
 </div>
 
