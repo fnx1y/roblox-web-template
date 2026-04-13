@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CLPD System</title>
+<title>CLPD Command System</title>
 
-<link rel="icon" href="/CLPD.png?v=21">
+<link rel="icon" href="/CLPD.png?v=22">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -20,46 +20,40 @@ color:white;
 overflow:hidden;
 }
 
-/* 🌊 BACKGROUND (BLURRY WAVES) */
+/* BACKGROUND */
 .bg{
 position:fixed;
 width:100%;
 height:100%;
 background:url("Soothing Black And White GIF by Pi-Slices.gif") center/cover no-repeat;
-filter:blur(12px); /* 🔥 MORE BLUR */
-transform:scale(1.1); /* prevents blur edges */
+filter:blur(12px);
+transform:scale(1.1);
 z-index:0;
 }
 
-/* OVERLAY */
 .overlay{
 position:fixed;
 width:100%;
 height:100%;
-background:rgba(10,15,35,0.55);
+background:rgba(10,15,35,0.6);
 z-index:1;
 }
 
-/* AUTH SCREEN */
+/* AUTH */
 .auth{
 position:absolute;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-width:360px;
+width:380px;
 padding:35px;
 border-radius:16px;
-background:rgba(20,30,70,0.7);
+background:rgba(20,30,70,0.75);
 backdrop-filter:blur(16px);
 z-index:2;
-animation:fadeIn .5s ease;
 }
 
-/* TEXT FIX */
-h3{
-font-weight:700;
-margin-bottom:15px;
-}
+h3{margin-bottom:15px;font-weight:700;}
 
 input{
 width:100%;
@@ -80,20 +74,11 @@ background:linear-gradient(90deg,#4d6aff,#6ea8ff);
 color:white;
 font-weight:600;
 cursor:pointer;
-transition:.2s;
 }
 
-button:hover{
-transform:translateY(-2px);
-box-shadow:0 0 15px rgba(100,150,255,0.6);
-}
+.output{margin-top:10px;font-size:13px;}
 
-.output{
-margin-top:10px;
-font-size:13px;
-}
-
-/* MAIN SYSTEM */
+/* MAIN */
 .main{
 display:none;
 position:relative;
@@ -101,22 +86,19 @@ z-index:2;
 height:100vh;
 }
 
-/* SIDEBAR */
 .sidebar{
-width:240px;
+width:260px;
 height:100%;
-background:rgba(15,20,40,0.75);
-backdrop-filter:blur(12px);
+background:rgba(15,20,40,0.8);
 padding:20px;
 float:left;
 }
 
-/* 🔥 PAGES TITLE */
 .sidebar-title{
-font-size:13px;
+font-size:12px;
 opacity:0.6;
 margin-bottom:10px;
-letter-spacing:1px;
+letter-spacing:2px;
 }
 
 .nav{
@@ -124,16 +106,12 @@ margin-bottom:8px;
 padding:10px;
 border-radius:10px;
 cursor:pointer;
-transition:.2s;
 }
 
-.nav:hover{
-background:rgba(255,255,255,0.12);
-}
+.nav:hover{background:rgba(255,255,255,0.1);}
 
-/* CONTENT */
 .content{
-margin-left:240px;
+margin-left:260px;
 padding:30px;
 height:100vh;
 overflow-y:auto;
@@ -143,55 +121,53 @@ overflow-y:auto;
 .page.active{display:block;}
 
 h1{
-font-size:26px;
+font-size:28px;
 margin-bottom:10px;
 }
 
-p{
-line-height:1.7;
-color:#d6dbff;
+.section-title{
+margin-top:20px;
+margin-bottom:10px;
+font-weight:700;
+font-size:16px;
+opacity:0.9;
 }
 
-/* CARD */
+p{
+line-height:1.8;
+color:#d6dbff;
+margin-bottom:10px;
+}
+
 .card{
 margin-bottom:20px;
 padding:20px;
 border-radius:14px;
 background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
-}
-
-/* ANIMATION */
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(20px);}
-to{opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🌊 BLURRED BACKGROUND -->
 <div class="bg"></div>
 <div class="overlay"></div>
 
-<!-- 🔐 AUTH ONLY -->
+<!-- AUTH -->
 <div class="auth" id="authBox">
 <h3>CLPD Secure Access</h3>
 
 <input id="username" placeholder="Roblox Username">
-
 <button onclick="login()">Authenticate</button>
 
 <div class="output" id="output"></div>
 </div>
 
-<!-- MAIN SYSTEM -->
+<!-- MAIN -->
 <div class="main" id="mainSystem">
 
 <div class="sidebar">
 <div class="sidebar-title">PAGES</div>
-
 <div class="nav" onclick="showPage('home')">🏠 Home</div>
 <div class="nav" onclick="showPage('rules')">📜 Rules</div>
 <div class="nav" onclick="showPage('chain')">🧭 Chain</div>
@@ -205,29 +181,45 @@ to{opacity:1; transform:translateY(0);}
 <h1>Central London Police Department</h1>
 
 <div class="card">
-<p>
-The Central London Police Department operates under a structured and disciplined command system designed
-to ensure efficiency, professionalism, and realism in all operations.
-</p>
-</div>
 
-<div class="card">
+<div class="section-title">Operational Overview</div>
 <p>
-This platform serves as the official information system providing access to rules, rank structures, and
-chain of command procedures required for all personnel.
+The Central London Police Department operates under a structured command framework designed to maintain order, enforce discipline, and ensure a high level of realism across all operational environments. Every action taken within the department reflects not only individual conduct, but the integrity of the entire organization.
 </p>
+
+<p>
+This system serves as the official knowledge base and operational interface for all personnel. It outlines expectations, defines responsibilities, and provides a centralized structure through which all members must operate. Failure to adhere to these standards undermines departmental efficiency and will result in corrective action.
+</p>
+
+<div class="section-title">Mission Directive</div>
+<p>
+The mission of the Central London Police Department is to establish a controlled, professional environment in which all participants contribute to a consistent and immersive policing experience. This includes maintaining respect, enforcing regulations, and executing responsibilities in alignment with command expectations.
+</p>
+
 </div>
 </div>
 
 <!-- RULES -->
 <div id="rules" class="page">
-<h1>Rules & Conduct</h1>
+<h1>Rules & Conduct Policy</h1>
 
 <div class="card">
+
+<div class="section-title">Professional Conduct</div>
 <p>
-All personnel must maintain professional conduct at all times. Disruption, harassment, or misuse of authority
-is strictly prohibited.
+All personnel are required to maintain a professional demeanor at all times. This includes communication, behavior, and decision-making in both active operations and community interaction. Conduct that is considered disruptive, immature, or intentionally harmful to the operational environment is strictly prohibited.
 </p>
+
+<div class="section-title">Respect & Discipline</div>
+<p>
+Respect is mandatory across all ranks. Personnel must treat others with fairness and professionalism regardless of status. Harassment, targeting, or discriminatory behavior will not be tolerated under any circumstances and will result in immediate disciplinary review.
+</p>
+
+<div class="section-title">Communication Standards</div>
+<p>
+All communication must remain clear, controlled, and appropriate. The use of offensive language, including attempts to bypass filters, is strictly forbidden. Personnel are expected to communicate in a manner that reflects the professionalism of the department.
+</p>
+
 </div>
 </div>
 
@@ -236,20 +228,50 @@ is strictly prohibited.
 <h1>Chain of Command</h1>
 
 <div class="card">
+
+<div class="section-title">Command Structure</div>
+<p>
+The chain of command exists to maintain order, efficiency, and structured escalation of all issues. Personnel are required to follow this hierarchy when seeking assistance, reporting issues, or requesting decisions.
+</p>
+
 <p>
 PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
 </p>
+
+<div class="section-title">Operational Protocol</div>
+<p>
+All issues must be addressed at the lowest possible level before escalation. Skipping ranks without valid justification disrupts command flow and is considered a violation of protocol. Personnel must provide clear context when escalating matters and comply with decisions made by higher authority.
+</p>
+
 </div>
 </div>
 
 <!-- RANKS -->
 <div id="ranks" class="page">
-<h1>Rank Structure</h1>
+<h1>Rank Structure & Responsibilities</h1>
 
 <div class="card">
+
+<div class="section-title">Low Ranks</div>
 <p>
-Ranks define authority, responsibility, and operational control across the department.
+Low ranks are responsible for executing frontline duties, including patrol operations and responding to incidents. Their role is to follow instructions, maintain discipline, and develop understanding of operational procedures.
 </p>
+
+<div class="section-title">Middle Ranks</div>
+<p>
+Middle ranks act as supervisory personnel, assisting in maintaining order and ensuring that lower ranks operate effectively. They serve as the bridge between execution and command.
+</p>
+
+<div class="section-title">High Command</div>
+<p>
+High command oversees departmental operations, enforces discipline, and ensures that all systems function in accordance with established standards.
+</p>
+
+<div class="section-title">Chief & Ownership</div>
+<p>
+Chief ranks and ownership maintain full authority over the department. Their responsibility is to enforce structure, make critical decisions, and ensure long-term operational integrity.
+</p>
+
 </div>
 </div>
 
@@ -258,38 +280,26 @@ Ranks define authority, responsibility, and operational control across the depar
 
 <script>
 async function login(){
+const username=document.getElementById("username").value.trim();
+const output=document.getElementById("output");
 
-const username = document.getElementById("username").value.trim();
-const output = document.getElementById("output");
-
-if(!username){
-output.innerText="Enter username.";
-return;
-}
+if(!username){output.innerText="Enter username.";return;}
 
 output.innerText="Authenticating...";
 
 try{
-
-const res = await fetch("/api/roblox",{
+const res=await fetch("/api/roblox",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({username})
 });
 
-if(!res.ok){
-output.innerText="Access denied.";
-return;
-}
+if(!res.ok){output.innerText="Access denied.";return;}
 
-/* 🔥 CLEAN SWITCH */
 document.getElementById("authBox").style.display="none";
 document.getElementById("mainSystem").style.display="block";
 
-}catch{
-output.innerText="Network error.";
-}
-
+}catch{output.innerText="Network error.";}
 }
 
 function showPage(id){
