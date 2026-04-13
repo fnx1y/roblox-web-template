@@ -6,7 +6,7 @@
 
 <title>CLPD System</title>
 
-<link rel="icon" href="/CLPD.png?v=20">
+<link rel="icon" href="/CLPD.png?v=21">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -16,25 +16,32 @@
 body{
 font-family:'Inter',sans-serif;
 height:100vh;
-color:#ffffff;
-
-/* 🌊 YOUR EXACT FILE NAME (IMPORTANT) */
-background:url("Soothing Black And White GIF by Pi-Slices.gif") no-repeat center center fixed;
-background-size:cover;
+color:white;
+overflow:hidden;
 }
 
-/* 🔥 CLEAN OVERLAY (balanced) */
+/* 🌊 BACKGROUND (BLURRY WAVES) */
+.bg{
+position:fixed;
+width:100%;
+height:100%;
+background:url("Soothing Black And White GIF by Pi-Slices.gif") center/cover no-repeat;
+filter:blur(12px); /* 🔥 MORE BLUR */
+transform:scale(1.1); /* prevents blur edges */
+z-index:0;
+}
+
+/* OVERLAY */
 .overlay{
 position:fixed;
 width:100%;
 height:100%;
 background:rgba(10,15,35,0.55);
-backdrop-filter:blur(6px);
 z-index:1;
 }
 
-/* LOGIN */
-.login{
+/* AUTH SCREEN */
+.auth{
 position:absolute;
 top:50%;
 left:50%;
@@ -42,8 +49,8 @@ transform:translate(-50%,-50%);
 width:360px;
 padding:35px;
 border-radius:16px;
-background:rgba(20,30,70,0.65);
-backdrop-filter:blur(14px);
+background:rgba(20,30,70,0.7);
+backdrop-filter:blur(16px);
 z-index:2;
 animation:fadeIn .5s ease;
 }
@@ -52,7 +59,6 @@ animation:fadeIn .5s ease;
 h3{
 font-weight:700;
 margin-bottom:15px;
-letter-spacing:.5px;
 }
 
 input{
@@ -62,9 +68,7 @@ border:none;
 border-radius:10px;
 background:rgba(255,255,255,0.12);
 color:white;
-font-size:14px;
 margin-bottom:10px;
-outline:none;
 }
 
 button{
@@ -81,31 +85,38 @@ transition:.2s;
 
 button:hover{
 transform:translateY(-2px);
-box-shadow:0 0 18px rgba(100,150,255,0.6);
+box-shadow:0 0 15px rgba(100,150,255,0.6);
 }
 
 .output{
 margin-top:10px;
 font-size:13px;
-opacity:0.9;
 }
 
-/* MAIN */
+/* MAIN SYSTEM */
 .main{
 display:none;
 position:relative;
 z-index:2;
 height:100vh;
-display:flex;
-animation:fadeIn .5s ease;
 }
 
 /* SIDEBAR */
 .sidebar{
 width:240px;
+height:100%;
 background:rgba(15,20,40,0.75);
 backdrop-filter:blur(12px);
 padding:20px;
+float:left;
+}
+
+/* 🔥 PAGES TITLE */
+.sidebar-title{
+font-size:13px;
+opacity:0.6;
+margin-bottom:10px;
+letter-spacing:1px;
 }
 
 .nav{
@@ -113,7 +124,6 @@ margin-bottom:8px;
 padding:10px;
 border-radius:10px;
 cursor:pointer;
-font-size:14px;
 transition:.2s;
 }
 
@@ -123,35 +133,32 @@ background:rgba(255,255,255,0.12);
 
 /* CONTENT */
 .content{
-flex:1;
+margin-left:240px;
 padding:30px;
+height:100vh;
 overflow-y:auto;
 }
 
+.page{display:none;}
+.page.active{display:block;}
+
 h1{
 font-size:26px;
-font-weight:700;
 margin-bottom:10px;
 }
 
 p{
 line-height:1.7;
-font-size:14px;
 color:#d6dbff;
 }
 
-/* CARDS */
+/* CARD */
 .card{
 margin-bottom:20px;
 padding:20px;
 border-radius:14px;
 background:rgba(255,255,255,0.08);
 backdrop-filter:blur(10px);
-transition:.2s;
-}
-
-.card:hover{
-transform:translateY(-4px);
 }
 
 /* ANIMATION */
@@ -164,10 +171,12 @@ to{opacity:1; transform:translateY(0);}
 
 <body>
 
+<!-- 🌊 BLURRED BACKGROUND -->
+<div class="bg"></div>
 <div class="overlay"></div>
 
-<!-- LOGIN -->
-<div class="login" id="loginBox">
+<!-- 🔐 AUTH ONLY -->
+<div class="auth" id="authBox">
 <h3>CLPD Secure Access</h3>
 
 <input id="username" placeholder="Roblox Username">
@@ -177,10 +186,12 @@ to{opacity:1; transform:translateY(0);}
 <div class="output" id="output"></div>
 </div>
 
-<!-- MAIN -->
+<!-- MAIN SYSTEM -->
 <div class="main" id="mainSystem">
 
 <div class="sidebar">
+<div class="sidebar-title">PAGES</div>
+
 <div class="nav" onclick="showPage('home')">🏠 Home</div>
 <div class="nav" onclick="showPage('rules')">📜 Rules</div>
 <div class="nav" onclick="showPage('chain')">🧭 Chain</div>
@@ -195,19 +206,17 @@ to{opacity:1; transform:translateY(0);}
 
 <div class="card">
 <p>
-The Central London Police Department operates under a structured, disciplined framework designed to maintain
-order, realism, and professionalism. This system ensures all personnel follow defined protocols and uphold
-departmental standards at all times.
+The Central London Police Department operates under a structured and disciplined command system designed
+to ensure efficiency, professionalism, and realism in all operations.
 </p>
 </div>
 
 <div class="card">
 <p>
-This platform serves as the official operational interface, providing access to rules, rank structures,
-and command procedures. All members are expected to remain compliant with these systems.
+This platform serves as the official information system providing access to rules, rank structures, and
+chain of command procedures required for all personnel.
 </p>
 </div>
-
 </div>
 
 <!-- RULES -->
@@ -216,12 +225,8 @@ and command procedures. All members are expected to remain compliant with these 
 
 <div class="card">
 <p>
-All personnel must maintain professionalism at all times. Disruptive behavior, harassment, or misuse of authority
-will result in disciplinary action.
-</p>
-
-<p>
-Communication must remain appropriate. Offensive language and bypassing filters is strictly prohibited.
+All personnel must maintain professional conduct at all times. Disruption, harassment, or misuse of authority
+is strictly prohibited.
 </p>
 </div>
 </div>
@@ -232,7 +237,6 @@ Communication must remain appropriate. Offensive language and bypassing filters 
 
 <div class="card">
 <p>
-All matters must follow proper escalation:
 PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
 </p>
 </div>
@@ -244,8 +248,7 @@ PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
 
 <div class="card">
 <p>
-Ranks define authority, responsibility, and operational control. Personnel must follow all orders issued
-by superior ranks unless otherwise directed.
+Ranks define authority, responsibility, and operational control across the department.
 </p>
 </div>
 </div>
@@ -274,16 +277,14 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify({username})
 });
 
-const data = await res.json();
-
 if(!res.ok){
 output.innerText="Access denied.";
 return;
 }
 
-/* SWITCH */
-document.getElementById("loginBox").style.display="none";
-document.getElementById("mainSystem").style.display="flex";
+/* 🔥 CLEAN SWITCH */
+document.getElementById("authBox").style.display="none";
+document.getElementById("mainSystem").style.display="block";
 
 }catch{
 output.innerText="Network error.";
