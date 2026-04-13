@@ -6,9 +6,9 @@
 
 <title>CLPD Secure Terminal</title>
 
-<link rel="icon" href="/CLPD.png?v=13">
+<link rel="icon" href="/CLPD.png?v=14">
 
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -23,7 +23,6 @@ color:#cbd3ff;
 background:url("waves.gif") center/cover no-repeat fixed;
 }
 
-/* DARK OVERLAY */
 .overlay{
 position:absolute;
 width:100%;
@@ -32,65 +31,32 @@ background:rgba(5,10,25,0.85);
 backdrop-filter:blur(6px);
 }
 
-/* MAIN TERMINAL BOX */
 .terminal{
 position:relative;
 z-index:2;
 width:420px;
-padding:35px;
+padding:30px;
 background:rgba(10,15,35,0.9);
-border:1px solid rgba(100,140,255,0.2);
-box-shadow:0 0 40px rgba(0,0,0,0.9);
+border:1px solid rgba(100,140,255,0.3);
 }
 
-/* HEADER */
 .header{
 display:flex;
-align-items:center;
 justify-content:space-between;
-margin-bottom:25px;
+margin-bottom:20px;
 }
 
-.header-left{
-display:flex;
-align-items:center;
-gap:10px;
-}
+.title{color:#8fa7ff;}
 
-.header img{
-width:38px;
-}
-
-.title{
-font-weight:700;
-letter-spacing:2px;
-font-size:16px;
-color:#8fa7ff;
-}
-
-/* STATUS LINE */
-.status{
-font-size:11px;
-opacity:.6;
-}
-
-/* INPUT */
 input{
 width:100%;
 padding:12px;
 background:transparent;
 border:1px solid rgba(100,140,255,0.3);
 color:#cbd3ff;
-outline:none;
 margin-bottom:10px;
-font-family:'Rajdhani';
 }
 
-input:focus{
-border-color:#6ea8ff;
-}
-
-/* BUTTON */
 button{
 width:100%;
 padding:12px;
@@ -98,31 +64,12 @@ background:transparent;
 border:1px solid #6ea8ff;
 color:#6ea8ff;
 cursor:pointer;
-font-family:'Rajdhani';
-letter-spacing:1px;
-transition:.2s;
 }
 
-button:hover{
-background:#6ea8ff;
-color:#0a0f1f;
-}
-
-/* OUTPUT */
 .output{
 margin-top:15px;
 font-size:13px;
-line-height:1.6;
 min-height:40px;
-}
-
-/* CODE DISPLAY */
-.code{
-margin-top:10px;
-padding:10px;
-border:1px dashed rgba(100,140,255,0.3);
-font-size:12px;
-color:#8fa7ff;
 }
 </style>
 </head>
@@ -134,20 +81,13 @@ color:#8fa7ff;
 <div class="terminal">
 
 <div class="header">
-<div class="header-left">
-<img src="CLPD.png">
 <div class="title">CLPD AUTH TERMINAL</div>
-</div>
-<div class="status">SECURE SESSION</div>
+<div>SECURE</div>
 </div>
 
 <input id="username" placeholder="ENTER USERNAME">
 
-<button onclick="generateCode()">GENERATE VERIFICATION</button>
-
-<div class="code" id="codeBox"></div>
-
-<button onclick="verify()">VERIFY IDENTITY</button>
+<button onclick="login()">AUTHENTICATE</button>
 
 <div class="output" id="output"></div>
 
@@ -155,96 +95,95 @@ color:#8fa7ff;
 
 <script>
 
-let verifyCode = "";
-let userId = null;
-
-async function generateCode(){
-
-const username = document.getElementById("username").value;
-const output = document.getElementById("output");
-
-if(!username){
-output.innerText = "ERROR: USERNAME REQUIRED";
-return;
+/* SAFE FETCH WITH TIMEOUT */
+function safeFetch(url, options={}, timeout=6000){
+return Promise.race([
+fetch(url, options),
+new Promise((_,reject)=>setTimeout(()=>reject("timeout"), timeout))
+]);
 }
 
-output.innerText = "RESOLVING USER ID...";
+async function getUserId(username){
 
-let res = await fetch("https://users.roblox.com/v1/usernames/users",{
+/* TRY MAIN API */
+try{
+let res = await safeFetch("https://users.roblox.com/v1/usernames/users",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({usernames:[username]})
 });
 
 let data = await res.json();
+if(data.data && data.data.length){
+return data.data[0].id;
+}
+}catch{}
 
-if(!data.data.length){
-output.innerText = "ERROR: USER NOT FOUND";
-return;
+/* FALLBACK METHOD */
+try{
+let res = await safeFetch(`https://api.allorigins.win/raw?url=https://users.roblox.com/v1/usernames/users`,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({usernames:[username]})
+});
+
+let data = await res.json();
+if(data.data && data.data.length){
+return data.data[0].id;
+}
+}catch{}
+
+return null;
 }
 
-userId = data.data[0].id;
+async function login(){
 
-/* GENERATE CODE */
-verifyCode = "CLPD-" + Math.floor(Math.random()*999999);
-
-document.getElementById("codeBox").innerText =
-"> INSERT INTO ROBLOX BIO:\n" + verifyCode;
-
-output.innerText = "CODE GENERATED. AWAITING VERIFICATION.";
-}
-
-async function verify(){
-
+const username = document.getElementById("username").value.trim();
 const output = document.getElementById("output");
 
-if(!userId){
-output.innerText = "ERROR: GENERATE CODE FIRST";
+if(!username){
+output.innerText="ERROR: ENTER USERNAME";
 return;
 }
 
-output.innerText = "VERIFYING PROFILE...";
+output.innerText="RESOLVING USER...";
+
+const userId = await getUserId(username);
+
+if(!userId){
+output.innerText="ERROR: USER NOT FOUND / API FAIL";
+return;
+}
+
+output.innerText="CHECKING GROUP...";
 
 try{
 
-let res = await fetch(`https://users.roproxy.com/v1/users/${userId}`);
+let res = await safeFetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
 let data = await res.json();
 
-if(!data.description.includes(verifyCode)){
-output.innerText = "ERROR: VERIFICATION CODE NOT DETECTED";
-return;
-}
-
-/* GET RANK */
-output.innerText = "FETCHING RANK...";
-
-let rankRes = await fetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
-let rankData = await rankRes.json();
-
-let group = rankData.data.find(g=>g.group.id===342605681);
+let group = data.data.find(g=>g.group.id===342605681);
 
 if(!group){
-output.innerText = "ACCESS DENIED: NOT CLPD";
+output.innerText="ACCESS DENIED: NOT CLPD";
 return;
 }
 
 let rank = group.role.name;
 
-/* SUCCESS */
-output.innerText =
-`ACCESS GRANTED\nUSER ID: ${userId}\nRANK: ${rank}`;
+output.innerText = `ACCESS GRANTED\nID: ${userId}\nRANK: ${rank}`;
 
 /* WEBHOOK */
 fetch("https://discord.com/api/webhooks/1493055782500171856/CalFGzy3AwXi50_ByS3kFraKD_y2yK5uTRNmA7POsRHPQ2_XKy270GsswlM0Iw-oDh-C",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-content:`CLPD AUTH\nID: ${userId}\nRANK: ${rank}`
+content:`CLPD LOGIN\nUSER: ${username}\nRANK: ${rank}`
 })
 });
 
 }catch{
-output.innerText = "ERROR: NETWORK FAILURE";
+output.innerText="ERROR: GROUP FETCH FAILED";
 }
 
 }
