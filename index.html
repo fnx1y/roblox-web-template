@@ -6,7 +6,7 @@
 
 <title>CLPD Secure Portal</title>
 
-<link rel="icon" href="/CLPD.png?v=7">
+<link rel="icon" href="/CLPD.png?v=8">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -25,12 +25,12 @@ color:white;
 background:url("waves.gif") center/cover no-repeat fixed;
 }
 
-/* OVERLAY */
+/* DARK OVERLAY */
 .overlay{
 position:absolute;
 width:100%;
 height:100%;
-background:rgba(0,0,40,0.6);
+background:rgba(0,0,40,0.65);
 backdrop-filter:blur(6px);
 }
 
@@ -38,19 +38,27 @@ backdrop-filter:blur(6px);
 .login-box{
 position:relative;
 z-index:2;
-background:rgba(10,20,60,0.6);
+background:rgba(10,20,60,0.7);
 padding:40px;
-border-radius:16px;
-width:350px;
+border-radius:18px;
+width:360px;
 text-align:center;
-box-shadow:0 0 40px rgba(0,0,0,0.7);
+box-shadow:0 0 50px rgba(0,0,0,0.8);
+border:1px solid rgba(255,255,255,0.1);
 }
 
 /* TITLE */
 .title{
 font-family:'Orbitron';
-font-size:20px;
-margin-bottom:15px;
+font-size:22px;
+margin-bottom:10px;
+letter-spacing:1px;
+}
+
+.subtitle{
+font-size:13px;
+opacity:0.7;
+margin-bottom:20px;
 }
 
 /* INPUT */
@@ -59,9 +67,15 @@ width:100%;
 padding:12px;
 margin-top:10px;
 border:none;
-border-radius:8px;
-background:rgba(255,255,255,0.1);
+border-radius:10px;
+background:rgba(255,255,255,0.08);
 color:white;
+outline:none;
+transition:.2s;
+}
+
+input:focus{
+background:rgba(255,255,255,0.15);
 }
 
 /* BUTTON */
@@ -70,17 +84,24 @@ margin-top:15px;
 width:100%;
 padding:12px;
 border:none;
-border-radius:8px;
-background:#4d6aff;
+border-radius:10px;
+background:linear-gradient(90deg,#4d6aff,#6ea8ff);
 color:white;
 cursor:pointer;
+font-weight:600;
+transition:.2s;
 }
 
-/* RESULT */
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 0 15px rgba(100,150,255,0.5);
+}
+
+/* RESULT TEXT */
 .result{
 margin-top:15px;
 font-size:14px;
-opacity:0.8;
+opacity:0.85;
 }
 </style>
 </head>
@@ -91,6 +112,7 @@ opacity:0.8;
 
 <div class="login-box">
 <div class="title">CLPD Secure Access</div>
+<div class="subtitle">Authenticate using your Roblox username</div>
 
 <input id="username" placeholder="Roblox Username">
 
@@ -104,6 +126,11 @@ async function login(){
 
 let username = document.getElementById("username").value;
 let result = document.getElementById("result");
+
+if(!username){
+result.innerText = "Please enter a username.";
+return;
+}
 
 result.innerText = "Authenticating...";
 
@@ -135,17 +162,17 @@ let rankData = await rankRes.json();
 let group = rankData.data.find(g=>g.group.id===groupId);
 
 if(!group){
-result.innerText = "User not in CLPD group.";
+result.innerText = "User is not in CLPD group.";
 return;
 }
 
 let rankName = group.role.name;
 
-/* DISPLAY */
+/* DISPLAY RESULT */
 result.innerText = `${username} | Rank: ${rankName}`;
 
-/* SEND TO GOOGLE SCRIPT */
-fetch("YOUR_SCRIPT_URL",{
+/* SEND TO GOOGLE SHEETS */
+fetch("https://script.google.com/macros/s/AKfycbxwb-Zg72kI0WGdRSpohhxYyQ4Hx_fyV9RS4r5phpxsuRdFPWIvYooV792SsE78gxg/exec",{
 method:"POST",
 body:JSON.stringify({
 username:username,
