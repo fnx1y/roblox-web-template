@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Central London Police Department</title>
-  <link rel="icon" href="/CLPD.png?v=24" />
+  <link rel="icon" href="/CLPD.png?v=23" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -519,48 +519,6 @@
       margin-top:12px;
     }
 
-    .copy-box{
-      margin-top:14px;
-      width:100%;
-      min-height:320px;
-      resize:vertical;
-      border:1px solid rgba(255,255,255,0.09);
-      background:rgba(255,255,255,0.05);
-      color:var(--text);
-      border-radius:16px;
-      padding:16px;
-      font-size:14px;
-      line-height:1.7;
-      outline:none;
-      font-family:inherit;
-    }
-
-    .copy-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .copy-btn{
-      border:none;
-      border-radius:14px;
-      padding:12px 16px;
-      font-size:14px;
-      font-weight:700;
-      color:white;
-      cursor:pointer;
-      background:linear-gradient(135deg, var(--accent-2), var(--accent));
-      box-shadow:0 14px 34px rgba(78,127,255,0.3);
-    }
-
-    .copy-status{
-      display:flex;
-      align-items:center;
-      color:var(--muted);
-      font-size:13px;
-    }
-
     @media (max-width: 1100px){
       .card.half, .card.third{
         grid-column:span 12;
@@ -654,7 +612,6 @@
         <button class="nav-btn" data-page="leadership">👑 Leadership</button>
         <button class="nav-btn" data-page="documents">📄 Documents</button>
         <button class="nav-btn" data-page="group">🛡️ Roblox Group</button>
-        <button class="nav-btn" data-page="recruitment">📣 Recruitment</button>
       </nav>
 
       <div class="user-card">
@@ -1268,49 +1225,6 @@
             </article>
           </div>
         </section>
-
-        <section class="page" id="page-recruitment">
-          <div class="grid">
-            <article class="card">
-              <div class="section-eyebrow">Recruitment</div>
-              <h3>Recruitment message for direct messages</h3>
-              <p>
-                This tab provides a recruitment message formatted to work cleanly in Discord direct messages. It is written in a more formal style while keeping the original intent of your message: inviting potential members to join CLPD, highlighting the department’s values, and directing them to the website and server.
-              </p>
-              <p>
-                Copy the message below and send it through direct messages to people you want to recruit.
-              </p>
-
-              <textarea id="recruitmentMessage" class="copy-box" readonly># Central London Police Department
-
-The Central London Police Department is a new and up-and-coming game and community built around professionalism, leadership, and long-term development. We are currently expanding and are looking for capable individuals who may be interested in joining and growing with us.
-
-Within CLPD, we place strong value on the following:
-
-**Fairness**  
-**Trust**  
-**Honor**  
-**Progression**
-
-We would like to invite you to consider joining Central London Police Department. We believe you could perform exceptionally well here, and we currently have a number of higher-ranking opportunities available for individuals who are capable of leadership, responsibility, and mature conduct.
-
-If you would like to review our information, documentation, and official department platform, you may do so through the links below:
-
-**Our website**  
-https://clpd.vercel.app
-
-**Our Discord server**  
-https://discord.gg/g4rGtU6MFd
-
-If you have any questions, feel free to direct message me.</textarea>
-
-              <div class="copy-actions">
-                <button id="copyRecruitmentBtn" class="copy-btn" type="button">Copy Recruitment Message</button>
-                <div id="copyRecruitmentStatus" class="copy-status">Ready to copy.</div>
-              </div>
-            </article>
-          </div>
-        </section>
       </div>
     </main>
   </div>
@@ -1325,9 +1239,6 @@ If you have any questions, feel free to direct message me.</textarea>
     const nav = document.getElementById("nav");
     const topbarTitle = document.getElementById("topbarTitle");
     const topbarSub = document.getElementById("topbarSub");
-    const copyRecruitmentBtn = document.getElementById("copyRecruitmentBtn");
-    const copyRecruitmentStatus = document.getElementById("copyRecruitmentStatus");
-    const recruitmentMessage = document.getElementById("recruitmentMessage");
 
     const pageMeta = {
       home: {
@@ -1365,10 +1276,6 @@ If you have any questions, feel free to direct message me.</textarea>
       group: {
         title: "Roblox Group",
         sub: "Mandatory membership requirement and official group access."
-      },
-      recruitment: {
-        title: "Recruitment",
-        sub: "Discord-ready outreach message for recruiting new members."
       }
     };
 
@@ -1430,25 +1337,12 @@ If you have any questions, feel free to direct message me.</textarea>
       }
     }
 
-    async function copyRecruitmentMessage(){
-      try{
-        await navigator.clipboard.writeText(recruitmentMessage.value);
-        copyRecruitmentStatus.textContent = "Recruitment message copied.";
-      } catch (error){
-        recruitmentMessage.select();
-        recruitmentMessage.setSelectionRange(0, recruitmentMessage.value.length);
-        copyRecruitmentStatus.textContent = "Press Ctrl+C to copy the selected message.";
-      }
-    }
-
     authBtn.addEventListener("click", authenticate);
     usernameInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter"){
         authenticate();
       }
     });
-
-    copyRecruitmentBtn.addEventListener("click", copyRecruitmentMessage);
   </script>
 </body>
 </html>
