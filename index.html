@@ -6,7 +6,7 @@
 
 <title>CLPD Command System</title>
 
-<link rel="icon" href="/CLPD.png?v=17">
+<link rel="icon" href="/CLPD.png?v=18">
 
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 
@@ -20,14 +20,16 @@ color:#cbd3ff;
 background:url("waves.gif") center/cover no-repeat fixed;
 }
 
+/* OVERLAY */
 .overlay{
 position:fixed;
 width:100%;
 height:100%;
 background:rgba(5,10,25,0.9);
+z-index:1;
 }
 
-/* LOGIN */
+/* LOGIN SCREEN */
 .login{
 position:absolute;
 top:50%;
@@ -58,19 +60,25 @@ color:#6ea8ff;
 cursor:pointer;
 }
 
-.output{margin-top:10px;}
-
-/* MAIN PANEL */
-.main{
-display:none;
-height:100vh;
-display:flex;
+.output{
+margin-top:10px;
 }
 
+/* MAIN SYSTEM (HIDDEN INITIALLY) */
+.main{
+display:none;
+position:relative;
+z-index:2;
+height:100vh;
+}
+
+/* SIDEBAR */
 .sidebar{
 width:260px;
 background:#121726;
 padding:20px;
+height:100%;
+float:left;
 }
 
 .nav{
@@ -84,9 +92,11 @@ border-radius:6px;
 background:rgba(255,255,255,0.05);
 }
 
+/* CONTENT */
 .content{
-flex:1;
+margin-left:260px;
 padding:30px;
+height:100vh;
 overflow-y:auto;
 }
 
@@ -95,6 +105,7 @@ overflow-y:auto;
 
 h1{margin-bottom:10px;}
 p{line-height:1.8;}
+
 .card{
 margin-bottom:20px;
 padding:20px;
@@ -110,7 +121,6 @@ border:1px solid rgba(255,255,255,0.05);
 
 <!-- LOGIN -->
 <div class="login" id="loginBox">
-
 <h3>CLPD AUTH TERMINAL</h3>
 
 <input id="username" placeholder="ENTER USERNAME">
@@ -118,7 +128,6 @@ border:1px solid rgba(255,255,255,0.05);
 <button onclick="login()">AUTHENTICATE</button>
 
 <div class="output" id="output"></div>
-
 </div>
 
 <!-- MAIN SYSTEM -->
@@ -140,19 +149,18 @@ border:1px solid rgba(255,255,255,0.05);
 
 <div class="card">
 <p>
-The Central London Police Department operates under a structured and highly disciplined command system designed
-to ensure operational efficiency, realism, and professionalism across all interactions. This platform serves as the
-primary knowledge base for all personnel and outlines the expectations required to maintain order within the department.
+The Central London Police Department operates under a strict and structured command system designed to ensure discipline,
+efficiency, and realism. This system defines expectations, responsibilities, and operational conduct for all personnel.
 </p>
 </div>
 
 <div class="card">
 <p>
-All members are expected to familiarize themselves with departmental regulations, rank responsibilities, and proper
-chain of command procedures. Failure to comply with these standards may result in disciplinary action depending on
-severity and repetition of violations.
+All members are expected to maintain professionalism at all times, follow the chain of command, and uphold the standards
+of the department. This platform serves as the official information hub for all operations and policies.
 </p>
 </div>
+
 </div>
 
 <!-- RULES -->
@@ -161,18 +169,15 @@ severity and repetition of violations.
 
 <div class="card">
 <p>
-All members must maintain professionalism at all times. This includes behavior, communication, and actions both
-in operational environments and community platforms. Disruptive or immature conduct is not tolerated.
+All personnel must maintain a professional attitude at all times. Disruptive behavior, trolling, or immaturity is not tolerated.
 </p>
 
 <p>
-Respect towards all individuals is mandatory regardless of rank. Harassment, discrimination, or targeting individuals
-is strictly prohibited and will result in immediate disciplinary action.
+Respect towards all individuals is mandatory. Harassment, discrimination, or targeting others will result in disciplinary action.
 </p>
 
 <p>
-The use of offensive language, including attempts to bypass chat filters, is not permitted. Communication must remain
-clear, professional, and appropriate.
+Communication must remain appropriate and professional. Offensive language and filter bypassing are prohibited.
 </p>
 </div>
 </div>
@@ -183,16 +188,11 @@ clear, professional, and appropriate.
 
 <div class="card">
 <p>
-The chain of command exists to ensure efficient communication and structured escalation of issues.
-Members must report to their immediate superior before escalating further.
+All issues must follow the structured chain of command to ensure proper handling and escalation.
 </p>
 
 <p>
 PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
-</p>
-
-<p>
-Skipping ranks without valid reason is considered a violation of protocol and may result in disciplinary action.
 </p>
 </div>
 </div>
@@ -203,19 +203,8 @@ Skipping ranks without valid reason is considered a violation of protocol and ma
 
 <div class="card">
 <p>
-Low ranks are responsible for patrol operations and responding to incidents while following direct orders.
-</p>
-
-<p>
-Middle ranks assist in supervision, maintaining discipline, and ensuring proper execution of tasks.
-</p>
-
-<p>
-High ranks manage divisions and oversee operational structure.
-</p>
-
-<p>
-Chief ranks maintain full authority over departmental decisions and enforcement of standards.
+Low ranks perform patrol duties and follow orders. Middle ranks supervise and assist leadership.
+High ranks manage operations and enforce discipline. Chief ranks maintain full control over departmental decisions.
 </p>
 </div>
 </div>
@@ -226,8 +215,7 @@ Chief ranks maintain full authority over departmental decisions and enforcement 
 
 <div class="card">
 <p>
-Nickname bypass permissions are strictly controlled and may only be granted by Chief ranks or above.
-Temporary permissions may not exceed 14 days.
+Only Chief ranks may grant permanent nickname bypass. Temporary bypasses must not exceed 14 days.
 </p>
 
 <p>
@@ -245,7 +233,14 @@ async function login(){
 const username = document.getElementById("username").value.trim();
 const output = document.getElementById("output");
 
+if(!username){
+output.innerText="ENTER USERNAME";
+return;
+}
+
 output.innerText="AUTHENTICATING...";
+
+try{
 
 const res = await fetch("/api/roblox",{
 method:"POST",
@@ -260,9 +255,14 @@ output.innerText="ACCESS DENIED";
 return;
 }
 
-/* SHOW MAIN SYSTEM */
+/* SWITCH UI CLEANLY */
 document.getElementById("loginBox").style.display="none";
-document.getElementById("mainSystem").style.display="flex";
+document.querySelector(".overlay").style.display="none";
+document.getElementById("mainSystem").style.display="block";
+
+}catch{
+output.innerText="NETWORK ERROR";
+}
 
 }
 
