@@ -4,262 +4,217 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Central London Police Department</title>
+<title>CLPD Portal</title>
 
-<!-- FIXED FAVICON -->
-<link rel="icon" type="image/png" href="/CLPD.png?v=3">
+<link rel="icon" href="/CLPD.png?v=5">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-* {margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box;}
 
-body {
-    font-family: 'Inter', sans-serif;
-    display:flex;
-    height:100vh;
-    color:rgba(255,255,255,0.75);
-    background: radial-gradient(circle at top, #1a233a, #0a0f1f 70%);
+body{
+font-family:'Inter',sans-serif;
+display:flex;
+height:100vh;
+color:rgba(255,255,255,0.75);
+background:linear-gradient(135deg,#0a0f1f,#1a2a55,#0a0f1f);
 }
 
 /* SIDEBAR */
-.sidebar {
-    width:270px;
-    background:#1c1f2b;
-    padding:20px;
+.sidebar{
+width:260px;
+background:#1b1e2a;
+padding:20px;
 }
 
-.sidebar h2 {
-    font-size:12px;
-    letter-spacing:2px;
-    opacity:0.6;
-    margin-bottom:10px;
+.sidebar h2{
+font-size:12px;
+opacity:.6;
+margin-bottom:10px;
 }
 
-/* NAV */
-.nav-btn {
-    padding:11px;
-    border-radius:10px;
-    cursor:pointer;
-    margin-bottom:6px;
-    transition:.25s;
+.nav-btn{
+padding:10px;
+margin-bottom:5px;
+border-radius:8px;
+cursor:pointer;
+transition:.2s;
 }
-
-.nav-btn:hover {
-    background:rgba(255,255,255,0.08);
-    transform:translateX(6px);
-}
-
-.nav-btn.active {
-    background:rgba(120,160,255,0.3);
-}
+.nav-btn:hover{background:rgba(255,255,255,0.08);}
+.nav-btn.active{background:rgba(100,150,255,0.3);}
 
 /* MAIN */
-.main {
-    flex:1;
-    padding:35px;
-    overflow-y:auto;
+.main{
+flex:1;
+padding:30px;
+overflow-y:auto;
 }
 
 /* HEADER */
-.header {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:25px;
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
 }
 
-.header img {
-    width:50px;
-    border-radius:50%;
-    box-shadow:0 0 20px rgba(0,0,0,0.5);
+.header-left{
+display:flex;
+align-items:center;
+gap:10px;
 }
 
-/* PAGE */
-.page {display:none;}
-.page.active {display:block;}
+.header img{
+width:45px;
+border-radius:50%;
+}
+
+.rank-display{
+background:rgba(255,255,255,0.1);
+padding:8px 12px;
+border-radius:8px;
+font-size:14px;
+}
 
 /* CARD */
-.card {
-    background:rgba(255,255,255,0.05);
-    padding:22px;
-    border-radius:14px;
-    margin-bottom:18px;
-    transition:.25s;
+.card{
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:12px;
+margin-bottom:15px;
 }
 
-.card:hover {
-    transform:translateY(-4px);
-    background:rgba(255,255,255,0.08);
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* LOGIN */
+.login-box input{
+padding:10px;
+border:none;
+border-radius:6px;
+margin-right:10px;
+}
+button{
+padding:10px 14px;
+border:none;
+border-radius:6px;
+background:#5b7cff;
+color:white;
+cursor:pointer;
 }
 
-/* TEXT */
-h1 {color:white;margin-bottom:10px;}
-p {line-height:1.8;}
-.list {line-height:2;}
-a {color:#8db3ff;}
+/* PUNISHMENT TABLE */
+.table{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:6px;
+background:#4d6aff;
+margin-right:5px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
 <h2>PAGES</h2>
+
 <div class="nav-btn active" onclick="showPage('home')">🏠 Home</div>
 <div class="nav-btn" onclick="showPage('rules')">📜 Rules</div>
-<div class="nav-btn" onclick="showPage('chain')">🧭 Chain of Command</div>
-<div class="nav-btn" onclick="showPage('ranks')">📊 Rank Structure</div>
-<div class="nav-btn" onclick="showPage('rowifi')">🪪 RoWifi Nickname Bypass</div>
-<div class="nav-btn" onclick="showPage('leadership')">👑 Leadership</div>
-<div class="nav-btn" onclick="showPage('docs')">📄 Documents</div>
+<div class="nav-btn" onclick="showPage('chain')">🧭 Chain</div>
+<div class="nav-btn" onclick="showPage('ranks')">📊 Ranks</div>
+<div class="nav-btn" onclick="showPage('punishments')">📌 Punishments</div>
+<div class="nav-btn" onclick="showPage('login')">🔐 Login</div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
 <div class="header">
+<div class="header-left">
 <img src="/CLPD.png">
-<h1>Central London Police Department</h1>
+<h2>Central London Police Department</h2>
+</div>
+<div class="rank-display" id="rankBox">Not Logged In</div>
 </div>
 
 <!-- HOME -->
 <div id="home" class="page active">
-<h1>🏠 Welcome</h1>
-
 <div class="card">
 <p>
-The Central London Police Department is a professional law enforcement roleplay environment designed to
-renovate and influence policing standards. Our system is built on structure, discipline, and realism,
-ensuring every member operates within a clearly defined framework.
-</p>
-</div>
-
-<div class="card">
-<p>
-This platform acts as the official information hub for all users. It contains all policies, rules,
-rank structures, and operational expectations. Every member is responsible for reviewing and understanding
-this information before participating in departmental activities.
-</p>
-</div>
-
-<div class="card">
-<p>
-Our mission is to maintain professionalism, enforce fairness, and provide a high-quality immersive
-experience where actions have structure and leadership has purpose.
+Central London Police Department is a structured law enforcement environment designed to enforce realism,
+discipline, and professionalism. This system ensures all players operate within a controlled hierarchy.
 </p>
 </div>
 </div>
 
 <!-- RULES -->
 <div id="rules" class="page">
-<h1>📜 Rules & Conduct Policy</h1>
+<div class="card">
+<b>Professional Conduct</b><br>
+All members must act professionally at all times. Any form of immaturity, trolling, or disruption
+will be handled strictly.<br><br>
 
-<div class="card list">
-<b>Professional Conduct:</b><br>
-All members must maintain professionalism at all times. Immature, disruptive, or unrealistic behavior
-will not be tolerated.<br><br>
+<b>Respect</b><br>
+All players must be treated equally. Harassment, targeting, or toxicity is prohibited.<br><br>
 
-<b>Respect:</b><br>
-All users must treat others with respect. Harassment or toxicity is prohibited.<br><br>
-
-<b>Language:</b><br>
+<b>Language</b><br>
 Offensive language or bypassing filters is not allowed.<br><br>
 
-<b>Discrimination:</b><br>
-Racism or discrimination results in severe punishment.<br><br>
+<b>Exploiting</b><br>
+Cheating results in immediate bans.<br><br>
 
-<b>Exploiting:</b><br>
-Cheats or unfair advantages result in bans.<br><br>
-
-<b>Follow ToS:</b><br>
-All members must follow Roblox and Discord rules.<br><br>
-
-<b>Authority:</b><br>
-Follow all instructions from higher ranks.<br><br>
-
-<b>Roleplay Integrity:</b><br>
-Do not disrupt scenes or troll.<br><br>
-
-<b>Common Sense:</b><br>
-If it’s clearly wrong, don’t do it.
+<b>Authority</b><br>
+Failure to follow higher rank instructions will result in punishment.
 </div>
 </div>
 
 <!-- CHAIN -->
 <div id="chain" class="page">
-<h1>🧭 Chain of Command</h1>
-
 <div class="card">
-<p>
-The Chain of Command ensures all communication and issues are handled efficiently and professionally.
-Members must follow this hierarchy when escalating issues or requesting assistance.
-</p>
-</div>
+<b>Chain of Command</b><br><br>
+PO → SUPT → D/INS → INS → DC → AC → CH → Ownership<br><br>
 
-<div class="card list">
-PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
-</div>
-
-<div class="card list">
-<b>Rules:</b><br>
-• Report to your immediate superior first<br>
-• Do not skip ranks without reason<br>
-• Provide context when escalating<br>
-• Respect all decisions made by leadership
+All issues must follow this path. Skipping ranks is prohibited unless necessary.
 </div>
 </div>
 
 <!-- RANKS -->
 <div id="ranks" class="page">
-<h1>📊 Rank Structure</h1>
-
-<div class="card list">
-<b>Low Ranks:</b> Patrol and respond to calls<br><br>
-<b>Middle Ranks:</b> Supervise and assist leadership<br><br>
-<b>High Ranks:</b> Manage divisions and enforce discipline<br><br>
-<b>HQ:</b> Administrative roles<br><br>
-<b>Chief:</b> Lead department<br><br>
+<div class="card">
+<b>Low Ranks:</b> Patrol, respond, follow orders<br><br>
+<b>Middle Ranks:</b> Supervise, assist command<br><br>
+<b>High Ranks:</b> Manage divisions<br><br>
+<b>Chief:</b> Lead entire department<br><br>
 <b>Ownership:</b> Full control
 </div>
 </div>
 
-<!-- ROWIFI -->
-<div id="rowifi" class="page">
-<h1>🪪 RoWifi Nickname Bypass</h1>
-
-<div class="card list">
-Chief+ can grant permanent bypass.<br>
-Max temporary: 14 days.<br>
-Rank must be included in nickname.<br>
-Unauthorized symbols not allowed.
-</div>
-</div>
-
-<!-- LEADERSHIP -->
-<div id="leadership" class="page">
-<h1>👑 Leadership</h1>
-
+<!-- PUNISHMENTS -->
+<div id="punishments" class="page">
 <div class="card">
-Owners:<br>
-Mrbluey4321jr<br>
-officerTMD
-</div>
-
-<div class="card">
-Co-Owner:<br>
-Survixzq
+<div class="table">
+<div><b>RDM</b></div><div><span class="badge">K</span></div>
+<div><b>VDM</b></div><div><span class="badge">W1</span><span class="badge">K</span></div>
+<div><b>FRP</b></div><div><span class="badge">K</span></div>
+<div><b>NLR</b></div><div><span class="badge">W1</span><span class="badge">K</span></div>
+<div><b>Trolling</b></div><div><span class="badge">W1</span><span class="badge">K</span></div>
 </div>
 </div>
+</div>
 
-<!-- DOCS -->
-<div id="docs" class="page">
-<h1>📄 Documents</h1>
-
-<div class="card">
-<a href="https://docs.google.com/spreadsheets/d/1hY6VEKeaHbmu88QLKhgNcOxh3yKyZ7gsnr-hz3onJEw/edit?usp=sharing" target="_blank">
-Open CLPD Documents
-</a>
+<!-- LOGIN -->
+<div id="login" class="page">
+<div class="card login-box">
+<input id="userInput" placeholder="Enter Username">
+<button onclick="login()">Login</button>
 </div>
 </div>
 
@@ -271,6 +226,11 @@ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 document.getElementById(id).classList.add('active');
 document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
 event.target.classList.add('active');
+}
+
+function login(){
+let user=document.getElementById("userInput").value;
+document.getElementById("rankBox").innerText=user+" | Rank: Unknown";
 }
 </script>
 
