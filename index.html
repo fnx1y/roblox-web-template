@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CLPD Secure Terminal</title>
+<title>CLPD Command System</title>
 
-<link rel="icon" href="/CLPD.png?v=16">
+<link rel="icon" href="/CLPD.png?v=17">
 
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -16,36 +16,29 @@
 body{
 font-family:'Rajdhani',sans-serif;
 height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
 color:#cbd3ff;
 background:url("waves.gif") center/cover no-repeat fixed;
 }
 
 .overlay{
-position:absolute;
+position:fixed;
 width:100%;
 height:100%;
 background:rgba(5,10,25,0.9);
 }
 
-.terminal{
-position:relative;
-z-index:2;
-width:420px;
+/* LOGIN */
+.login{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:400px;
 padding:30px;
 background:rgba(10,15,35,0.95);
 border:1px solid rgba(100,140,255,0.3);
+z-index:2;
 }
-
-.header{
-display:flex;
-justify-content:space-between;
-margin-bottom:20px;
-}
-
-.title{color:#8fa7ff;}
 
 input{
 width:100%;
@@ -65,10 +58,48 @@ color:#6ea8ff;
 cursor:pointer;
 }
 
-.output{
-margin-top:15px;
-font-size:13px;
-white-space:pre-line;
+.output{margin-top:10px;}
+
+/* MAIN PANEL */
+.main{
+display:none;
+height:100vh;
+display:flex;
+}
+
+.sidebar{
+width:260px;
+background:#121726;
+padding:20px;
+}
+
+.nav{
+margin-bottom:10px;
+cursor:pointer;
+padding:8px;
+border-radius:6px;
+}
+
+.nav:hover{
+background:rgba(255,255,255,0.05);
+}
+
+.content{
+flex:1;
+padding:30px;
+overflow-y:auto;
+}
+
+.page{display:none;}
+.page.active{display:block;}
+
+h1{margin-bottom:10px;}
+p{line-height:1.8;}
+.card{
+margin-bottom:20px;
+padding:20px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.05);
 }
 </style>
 </head>
@@ -77,12 +108,10 @@ white-space:pre-line;
 
 <div class="overlay"></div>
 
-<div class="terminal">
+<!-- LOGIN -->
+<div class="login" id="loginBox">
 
-<div class="header">
-<div class="title">CLPD AUTH TERMINAL</div>
-<div>SECURE</div>
-</div>
+<h3>CLPD AUTH TERMINAL</h3>
 
 <input id="username" placeholder="ENTER USERNAME">
 
@@ -92,55 +121,155 @@ white-space:pre-line;
 
 </div>
 
+<!-- MAIN SYSTEM -->
+<div class="main" id="mainSystem">
+
+<div class="sidebar">
+<div class="nav" onclick="showPage('home')">🏠 Home</div>
+<div class="nav" onclick="showPage('rules')">📜 Rules</div>
+<div class="nav" onclick="showPage('chain')">🧭 Chain</div>
+<div class="nav" onclick="showPage('ranks')">📊 Ranks</div>
+<div class="nav" onclick="showPage('rowifi')">🪪 RoWifi</div>
+</div>
+
+<div class="content">
+
+<!-- HOME -->
+<div id="home" class="page active">
+<h1>Central London Police Department</h1>
+
+<div class="card">
+<p>
+The Central London Police Department operates under a structured and highly disciplined command system designed
+to ensure operational efficiency, realism, and professionalism across all interactions. This platform serves as the
+primary knowledge base for all personnel and outlines the expectations required to maintain order within the department.
+</p>
+</div>
+
+<div class="card">
+<p>
+All members are expected to familiarize themselves with departmental regulations, rank responsibilities, and proper
+chain of command procedures. Failure to comply with these standards may result in disciplinary action depending on
+severity and repetition of violations.
+</p>
+</div>
+</div>
+
+<!-- RULES -->
+<div id="rules" class="page">
+<h1>Rules & Conduct</h1>
+
+<div class="card">
+<p>
+All members must maintain professionalism at all times. This includes behavior, communication, and actions both
+in operational environments and community platforms. Disruptive or immature conduct is not tolerated.
+</p>
+
+<p>
+Respect towards all individuals is mandatory regardless of rank. Harassment, discrimination, or targeting individuals
+is strictly prohibited and will result in immediate disciplinary action.
+</p>
+
+<p>
+The use of offensive language, including attempts to bypass chat filters, is not permitted. Communication must remain
+clear, professional, and appropriate.
+</p>
+</div>
+</div>
+
+<!-- CHAIN -->
+<div id="chain" class="page">
+<h1>Chain of Command</h1>
+
+<div class="card">
+<p>
+The chain of command exists to ensure efficient communication and structured escalation of issues.
+Members must report to their immediate superior before escalating further.
+</p>
+
+<p>
+PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
+</p>
+
+<p>
+Skipping ranks without valid reason is considered a violation of protocol and may result in disciplinary action.
+</p>
+</div>
+</div>
+
+<!-- RANKS -->
+<div id="ranks" class="page">
+<h1>Rank Structure</h1>
+
+<div class="card">
+<p>
+Low ranks are responsible for patrol operations and responding to incidents while following direct orders.
+</p>
+
+<p>
+Middle ranks assist in supervision, maintaining discipline, and ensuring proper execution of tasks.
+</p>
+
+<p>
+High ranks manage divisions and oversee operational structure.
+</p>
+
+<p>
+Chief ranks maintain full authority over departmental decisions and enforcement of standards.
+</p>
+</div>
+</div>
+
+<!-- ROWIFI -->
+<div id="rowifi" class="page">
+<h1>RoWifi Nickname Bypass</h1>
+
+<div class="card">
+<p>
+Nickname bypass permissions are strictly controlled and may only be granted by Chief ranks or above.
+Temporary permissions may not exceed 14 days.
+</p>
+
+<p>
+All members must include their rank within their nickname unless authorized otherwise.
+</p>
+</div>
+</div>
+
+</div>
+</div>
+
 <script>
 async function login(){
 
 const username = document.getElementById("username").value.trim();
 const output = document.getElementById("output");
 
-if(!username){
-output.innerText="ERROR: ENTER USERNAME";
-return;
-}
-
 output.innerText="AUTHENTICATING...";
-
-try{
 
 const res = await fetch("/api/roblox",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({ username })
+body:JSON.stringify({username})
 });
 
 const data = await res.json();
 
 if(!res.ok){
-output.innerText = `ERROR: ${data.error}`;
+output.innerText="ACCESS DENIED";
 return;
 }
 
-/* SUCCESS */
-output.innerText =
-`ACCESS GRANTED
-USER: ${data.username}
-ID: ${data.userId}
-RANK: ${data.rank}`;
+/* SHOW MAIN SYSTEM */
+document.getElementById("loginBox").style.display="none";
+document.getElementById("mainSystem").style.display="flex";
 
-/* DISCORD WEBHOOK */
-fetch("https://discord.com/api/webhooks/1493055782500171856/CalFGzy3AwXi50_ByS3kFraKD_y2yK5uTRNmA7POsRHPQ2_XKy270GsswlM0Iw-oDh-C",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-content:`CLPD LOGIN\nUSER: ${data.username}\nRANK: ${data.rank}`
-})
-});
-
-}catch(err){
-console.error(err);
-output.innerText="ERROR: CONNECTION FAILED";
 }
 
+/* PAGE SWITCH */
+function showPage(id){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
 </script>
 
