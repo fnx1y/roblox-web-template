@@ -4,113 +4,160 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CLPD Command System</title>
+<title>CLPD System</title>
 
-<link rel="icon" href="/CLPD.png?v=18">
+<link rel="icon" href="/CLPD.png?v=20">
 
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-font-family:'Rajdhani',sans-serif;
+font-family:'Inter',sans-serif;
 height:100vh;
-color:#cbd3ff;
-background:url("waves.gif") center/cover no-repeat fixed;
+color:#ffffff;
+
+/* 🌊 YOUR EXACT FILE NAME (IMPORTANT) */
+background:url("Soothing Black And White GIF by Pi-Slices.gif") no-repeat center center fixed;
+background-size:cover;
 }
 
-/* OVERLAY */
+/* 🔥 CLEAN OVERLAY (balanced) */
 .overlay{
 position:fixed;
 width:100%;
 height:100%;
-background:rgba(5,10,25,0.9);
+background:rgba(10,15,35,0.55);
+backdrop-filter:blur(6px);
 z-index:1;
 }
 
-/* LOGIN SCREEN */
+/* LOGIN */
 .login{
 position:absolute;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-width:400px;
-padding:30px;
-background:rgba(10,15,35,0.95);
-border:1px solid rgba(100,140,255,0.3);
+width:360px;
+padding:35px;
+border-radius:16px;
+background:rgba(20,30,70,0.65);
+backdrop-filter:blur(14px);
 z-index:2;
+animation:fadeIn .5s ease;
+}
+
+/* TEXT FIX */
+h3{
+font-weight:700;
+margin-bottom:15px;
+letter-spacing:.5px;
 }
 
 input{
 width:100%;
 padding:12px;
-background:transparent;
-border:1px solid rgba(100,140,255,0.4);
-color:#cbd3ff;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.12);
+color:white;
+font-size:14px;
 margin-bottom:10px;
+outline:none;
 }
 
 button{
 width:100%;
 padding:12px;
-background:transparent;
-border:1px solid #6ea8ff;
-color:#6ea8ff;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#4d6aff,#6ea8ff);
+color:white;
+font-weight:600;
 cursor:pointer;
+transition:.2s;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 0 18px rgba(100,150,255,0.6);
 }
 
 .output{
 margin-top:10px;
+font-size:13px;
+opacity:0.9;
 }
 
-/* MAIN SYSTEM (HIDDEN INITIALLY) */
+/* MAIN */
 .main{
 display:none;
 position:relative;
 z-index:2;
 height:100vh;
+display:flex;
+animation:fadeIn .5s ease;
 }
 
 /* SIDEBAR */
 .sidebar{
-width:260px;
-background:#121726;
+width:240px;
+background:rgba(15,20,40,0.75);
+backdrop-filter:blur(12px);
 padding:20px;
-height:100%;
-float:left;
 }
 
 .nav{
-margin-bottom:10px;
+margin-bottom:8px;
+padding:10px;
+border-radius:10px;
 cursor:pointer;
-padding:8px;
-border-radius:6px;
+font-size:14px;
+transition:.2s;
 }
 
 .nav:hover{
-background:rgba(255,255,255,0.05);
+background:rgba(255,255,255,0.12);
 }
 
 /* CONTENT */
 .content{
-margin-left:260px;
+flex:1;
 padding:30px;
-height:100vh;
 overflow-y:auto;
 }
 
-.page{display:none;}
-.page.active{display:block;}
+h1{
+font-size:26px;
+font-weight:700;
+margin-bottom:10px;
+}
 
-h1{margin-bottom:10px;}
-p{line-height:1.8;}
+p{
+line-height:1.7;
+font-size:14px;
+color:#d6dbff;
+}
 
+/* CARDS */
 .card{
 margin-bottom:20px;
 padding:20px;
-background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.05);
+border-radius:14px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+transition:.2s;
+}
+
+.card:hover{
+transform:translateY(-4px);
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
@@ -121,16 +168,16 @@ border:1px solid rgba(255,255,255,0.05);
 
 <!-- LOGIN -->
 <div class="login" id="loginBox">
-<h3>CLPD AUTH TERMINAL</h3>
+<h3>CLPD Secure Access</h3>
 
-<input id="username" placeholder="ENTER USERNAME">
+<input id="username" placeholder="Roblox Username">
 
-<button onclick="login()">AUTHENTICATE</button>
+<button onclick="login()">Authenticate</button>
 
 <div class="output" id="output"></div>
 </div>
 
-<!-- MAIN SYSTEM -->
+<!-- MAIN -->
 <div class="main" id="mainSystem">
 
 <div class="sidebar">
@@ -138,7 +185,6 @@ border:1px solid rgba(255,255,255,0.05);
 <div class="nav" onclick="showPage('rules')">📜 Rules</div>
 <div class="nav" onclick="showPage('chain')">🧭 Chain</div>
 <div class="nav" onclick="showPage('ranks')">📊 Ranks</div>
-<div class="nav" onclick="showPage('rowifi')">🪪 RoWifi</div>
 </div>
 
 <div class="content">
@@ -149,15 +195,16 @@ border:1px solid rgba(255,255,255,0.05);
 
 <div class="card">
 <p>
-The Central London Police Department operates under a strict and structured command system designed to ensure discipline,
-efficiency, and realism. This system defines expectations, responsibilities, and operational conduct for all personnel.
+The Central London Police Department operates under a structured, disciplined framework designed to maintain
+order, realism, and professionalism. This system ensures all personnel follow defined protocols and uphold
+departmental standards at all times.
 </p>
 </div>
 
 <div class="card">
 <p>
-All members are expected to maintain professionalism at all times, follow the chain of command, and uphold the standards
-of the department. This platform serves as the official information hub for all operations and policies.
+This platform serves as the official operational interface, providing access to rules, rank structures,
+and command procedures. All members are expected to remain compliant with these systems.
 </p>
 </div>
 
@@ -169,15 +216,12 @@ of the department. This platform serves as the official information hub for all 
 
 <div class="card">
 <p>
-All personnel must maintain a professional attitude at all times. Disruptive behavior, trolling, or immaturity is not tolerated.
+All personnel must maintain professionalism at all times. Disruptive behavior, harassment, or misuse of authority
+will result in disciplinary action.
 </p>
 
 <p>
-Respect towards all individuals is mandatory. Harassment, discrimination, or targeting others will result in disciplinary action.
-</p>
-
-<p>
-Communication must remain appropriate and professional. Offensive language and filter bypassing are prohibited.
+Communication must remain appropriate. Offensive language and bypassing filters is strictly prohibited.
 </p>
 </div>
 </div>
@@ -188,10 +232,7 @@ Communication must remain appropriate and professional. Offensive language and f
 
 <div class="card">
 <p>
-All issues must follow the structured chain of command to ensure proper handling and escalation.
-</p>
-
-<p>
+All matters must follow proper escalation:
 PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
 </p>
 </div>
@@ -203,23 +244,8 @@ PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
 
 <div class="card">
 <p>
-Low ranks perform patrol duties and follow orders. Middle ranks supervise and assist leadership.
-High ranks manage operations and enforce discipline. Chief ranks maintain full control over departmental decisions.
-</p>
-</div>
-</div>
-
-<!-- ROWIFI -->
-<div id="rowifi" class="page">
-<h1>RoWifi Nickname Bypass</h1>
-
-<div class="card">
-<p>
-Only Chief ranks may grant permanent nickname bypass. Temporary bypasses must not exceed 14 days.
-</p>
-
-<p>
-All members must include their rank within their nickname unless authorized otherwise.
+Ranks define authority, responsibility, and operational control. Personnel must follow all orders issued
+by superior ranks unless otherwise directed.
 </p>
 </div>
 </div>
@@ -234,11 +260,11 @@ const username = document.getElementById("username").value.trim();
 const output = document.getElementById("output");
 
 if(!username){
-output.innerText="ENTER USERNAME";
+output.innerText="Enter username.";
 return;
 }
 
-output.innerText="AUTHENTICATING...";
+output.innerText="Authenticating...";
 
 try{
 
@@ -251,22 +277,20 @@ body:JSON.stringify({username})
 const data = await res.json();
 
 if(!res.ok){
-output.innerText="ACCESS DENIED";
+output.innerText="Access denied.";
 return;
 }
 
-/* SWITCH UI CLEANLY */
+/* SWITCH */
 document.getElementById("loginBox").style.display="none";
-document.querySelector(".overlay").style.display="none";
-document.getElementById("mainSystem").style.display="block";
+document.getElementById("mainSystem").style.display="flex";
 
 }catch{
-output.innerText="NETWORK ERROR";
+output.innerText="Network error.";
 }
 
 }
 
-/* PAGE SWITCH */
 function showPage(id){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 document.getElementById(id).classList.add("active");
