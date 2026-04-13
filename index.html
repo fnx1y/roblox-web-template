@@ -6,7 +6,8 @@
 
 <title>Central London Police Department</title>
 
-<link rel="icon" type="image/png" href="/CLPD.png?v=2">
+<!-- FIXED FAVICON -->
+<link rel="icon" type="image/png" href="/CLPD.png?v=3">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -35,6 +36,7 @@ body {
     margin-bottom:10px;
 }
 
+/* NAV */
 .nav-btn {
     padding:11px;
     border-radius:10px;
@@ -70,6 +72,7 @@ body {
 .header img {
     width:50px;
     border-radius:50%;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
 }
 
 /* PAGE */
@@ -90,6 +93,7 @@ body {
     background:rgba(255,255,255,0.08);
 }
 
+/* TEXT */
 h1 {color:white;margin-bottom:10px;}
 p {line-height:1.8;}
 .list {line-height:2;}
@@ -99,16 +103,19 @@ a {color:#8db3ff;}
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
 <h2>PAGES</h2>
 <div class="nav-btn active" onclick="showPage('home')">🏠 Home</div>
 <div class="nav-btn" onclick="showPage('rules')">📜 Rules</div>
+<div class="nav-btn" onclick="showPage('chain')">🧭 Chain of Command</div>
 <div class="nav-btn" onclick="showPage('ranks')">📊 Rank Structure</div>
 <div class="nav-btn" onclick="showPage('rowifi')">🪪 RoWifi Nickname Bypass</div>
 <div class="nav-btn" onclick="showPage('leadership')">👑 Leadership</div>
 <div class="nav-btn" onclick="showPage('docs')">📄 Documents</div>
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
 <div class="header">
@@ -122,24 +129,24 @@ a {color:#8db3ff;}
 
 <div class="card">
 <p>
-The Central London Police Department is a structured and professional law enforcement roleplay environment
-built to renovate and influence policing within the platform. Our objective is to provide a realistic,
-fair, and engaging experience where all members operate under clear expectations and defined systems.
+The Central London Police Department is a professional law enforcement roleplay environment designed to
+renovate and influence policing standards. Our system is built on structure, discipline, and realism,
+ensuring every member operates within a clearly defined framework.
 </p>
 </div>
 
 <div class="card">
 <p>
-This platform serves as the official information hub for all members and visitors. Within this system,
-you will find detailed regulations, rank responsibilities, and operational guidelines that govern the department.
-All members are expected to review this information thoroughly and uphold the standards presented.
+This platform acts as the official information hub for all users. It contains all policies, rules,
+rank structures, and operational expectations. Every member is responsible for reviewing and understanding
+this information before participating in departmental activities.
 </p>
 </div>
 
 <div class="card">
 <p>
-Our mission is to maintain order, professionalism, and immersion at all times. Every action taken by a member
-reflects not only themselves but the department as a whole.
+Our mission is to maintain professionalism, enforce fairness, and provide a high-quality immersive
+experience where actions have structure and leadership has purpose.
 </p>
 </div>
 </div>
@@ -148,71 +155,72 @@ reflects not only themselves but the department as a whole.
 <div id="rules" class="page">
 <h1>📜 Rules & Conduct Policy</h1>
 
+<div class="card list">
+<b>Professional Conduct:</b><br>
+All members must maintain professionalism at all times. Immature, disruptive, or unrealistic behavior
+will not be tolerated.<br><br>
+
+<b>Respect:</b><br>
+All users must treat others with respect. Harassment or toxicity is prohibited.<br><br>
+
+<b>Language:</b><br>
+Offensive language or bypassing filters is not allowed.<br><br>
+
+<b>Discrimination:</b><br>
+Racism or discrimination results in severe punishment.<br><br>
+
+<b>Exploiting:</b><br>
+Cheats or unfair advantages result in bans.<br><br>
+
+<b>Follow ToS:</b><br>
+All members must follow Roblox and Discord rules.<br><br>
+
+<b>Authority:</b><br>
+Follow all instructions from higher ranks.<br><br>
+
+<b>Roleplay Integrity:</b><br>
+Do not disrupt scenes or troll.<br><br>
+
+<b>Common Sense:</b><br>
+If it’s clearly wrong, don’t do it.
+</div>
+</div>
+
+<!-- CHAIN -->
+<div id="chain" class="page">
+<h1>🧭 Chain of Command</h1>
+
 <div class="card">
 <p>
-The Central London Police Department enforces a strict code of conduct designed to ensure fairness,
-professionalism, and a high-quality roleplay experience. These rules apply at all times across all platforms.
+The Chain of Command ensures all communication and issues are handled efficiently and professionally.
+Members must follow this hierarchy when escalating issues or requesting assistance.
 </p>
 </div>
 
 <div class="card list">
-<b>Professional Conduct:</b><br>
-Members must maintain a professional attitude at all times. Disruptive, immature, or unrealistic behavior
-will not be tolerated and will result in disciplinary action.<br><br>
+PO → SUPT → D/INS → INS → DC → AC → CH → Ownership
+</div>
 
-<b>Respect:</b><br>
-All individuals must be treated equally and respectfully. Harassment, toxicity, or targeting others is prohibited.<br><br>
-
-<b>Language Policy:</b><br>
-The use of inappropriate or offensive language, including attempts to bypass filters, is strictly forbidden.<br><br>
-
-<b>Discrimination:</b><br>
-Racism or any form of discrimination will result in immediate and severe punishment.<br><br>
-
-<b>Exploiting:</b><br>
-Use of cheats, exploits, or unfair advantages is strictly prohibited and will result in a ban.<br><br>
-
-<b>Platform Compliance:</b><br>
-All members must follow Roblox and Discord Terms of Service at all times.<br><br>
-
-<b>Authority Compliance:</b><br>
-Failure to follow staff or higher rank instructions may result in disciplinary action.<br><br>
-
-<b>Roleplay Integrity:</b><br>
-Do not disrupt scenes, troll, or intentionally break immersion.<br><br>
-
-<b>Common Sense:</b><br>
-Any action that is clearly harmful or disruptive, even if not listed, is prohibited.
+<div class="card list">
+<b>Rules:</b><br>
+• Report to your immediate superior first<br>
+• Do not skip ranks without reason<br>
+• Provide context when escalating<br>
+• Respect all decisions made by leadership
 </div>
 </div>
 
 <!-- RANKS -->
 <div id="ranks" class="page">
-<h1>📊 Rank Structure & Responsibilities</h1>
+<h1>📊 Rank Structure</h1>
 
 <div class="card list">
-<b>Low Ranks (PO → LT)</b><br>
-Responsible for basic patrol duties, responding to incidents, and following orders from higher ranks.
-They form the foundation of the department and are expected to learn procedures and maintain discipline.<br><br>
-
-<b>Middle Ranks (CPT → CDR)</b><br>
-Assist in supervising lower ranks, maintaining order, and supporting operational leadership.
-They act as a bridge between general members and high command.<br><br>
-
-<b>High Ranks (D/COM → COM)</b><br>
-Responsible for managing divisions, enforcing discipline, and ensuring operations run effectively.
-They oversee department-wide activity.<br><br>
-
-<b>Headquarters (D/INS → ADV)</b><br>
-Administrative and structural roles responsible for internal management, coordination,
-and supporting executive decisions.<br><br>
-
-<b>Chief Ranks (DC → CH)</b><br>
-Top-level command responsible for enforcing standards, making critical decisions,
-and leading the department as a whole.<br><br>
-
-<b>Ownership</b><br>
-Holds full authority over all systems, rules, and operations within the department.
+<b>Low Ranks:</b> Patrol and respond to calls<br><br>
+<b>Middle Ranks:</b> Supervise and assist leadership<br><br>
+<b>High Ranks:</b> Manage divisions and enforce discipline<br><br>
+<b>HQ:</b> Administrative roles<br><br>
+<b>Chief:</b> Lead department<br><br>
+<b>Ownership:</b> Full control
 </div>
 </div>
 
@@ -221,10 +229,10 @@ Holds full authority over all systems, rules, and operations within the departme
 <h1>🪪 RoWifi Nickname Bypass</h1>
 
 <div class="card list">
-Only Chief ranks and above may grant permanent nickname bypass.<br><br>
-Temporary bypasses may not exceed 14 days.<br><br>
-All users must include their rank within their nickname.<br><br>
-Unauthorized use of symbols or bypasses is prohibited.
+Chief+ can grant permanent bypass.<br>
+Max temporary: 14 days.<br>
+Rank must be included in nickname.<br>
+Unauthorized symbols not allowed.
 </div>
 </div>
 
