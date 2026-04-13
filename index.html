@@ -4,96 +4,125 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CLPD Authentication Portal</title>
+<title>CLPD Secure Terminal</title>
 
-<link rel="icon" href="/CLPD.png?v=10">
+<link rel="icon" href="/CLPD.png?v=13">
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-font-family:'Inter',sans-serif;
+font-family:'Rajdhani',sans-serif;
 height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-color:white;
+color:#cbd3ff;
 background:url("waves.gif") center/cover no-repeat fixed;
 }
 
-/* OVERLAY */
+/* DARK OVERLAY */
 .overlay{
 position:absolute;
 width:100%;
 height:100%;
-background:rgba(0,0,40,0.7);
-backdrop-filter:blur(8px);
+background:rgba(5,10,25,0.85);
+backdrop-filter:blur(6px);
 }
 
-/* LOGIN BOX */
-.login-box{
+/* MAIN TERMINAL BOX */
+.terminal{
 position:relative;
 z-index:2;
-background:rgba(10,20,60,0.75);
-padding:45px;
-border-radius:18px;
-width:380px;
-text-align:center;
-box-shadow:0 0 60px rgba(0,0,0,0.8);
-border:1px solid rgba(255,255,255,0.08);
+width:420px;
+padding:35px;
+background:rgba(10,15,35,0.9);
+border:1px solid rgba(100,140,255,0.2);
+box-shadow:0 0 40px rgba(0,0,0,0.9);
 }
 
-/* TITLE */
+/* HEADER */
+.header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:25px;
+}
+
+.header-left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.header img{
+width:38px;
+}
+
 .title{
-font-family:'Orbitron';
-font-size:22px;
-margin-bottom:5px;
+font-weight:700;
+letter-spacing:2px;
+font-size:16px;
+color:#8fa7ff;
 }
 
-.subtitle{
-font-size:13px;
-opacity:0.7;
-margin-bottom:20px;
+/* STATUS LINE */
+.status{
+font-size:11px;
+opacity:.6;
 }
 
 /* INPUT */
 input{
 width:100%;
 padding:12px;
-border:none;
-border-radius:10px;
-background:rgba(255,255,255,0.08);
-color:white;
-margin-top:10px;
+background:transparent;
+border:1px solid rgba(100,140,255,0.3);
+color:#cbd3ff;
 outline:none;
+margin-bottom:10px;
+font-family:'Rajdhani';
+}
+
+input:focus{
+border-color:#6ea8ff;
 }
 
 /* BUTTON */
 button{
-margin-top:15px;
 width:100%;
 padding:12px;
-border:none;
-border-radius:10px;
-background:linear-gradient(90deg,#4d6aff,#6ea8ff);
-color:white;
+background:transparent;
+border:1px solid #6ea8ff;
+color:#6ea8ff;
 cursor:pointer;
-font-weight:600;
+font-family:'Rajdhani';
+letter-spacing:1px;
 transition:.2s;
 }
 
 button:hover{
-transform:translateY(-2px);
-box-shadow:0 0 20px rgba(100,150,255,0.5);
+background:#6ea8ff;
+color:#0a0f1f;
 }
 
-/* STATUS */
-.result{
+/* OUTPUT */
+.output{
 margin-top:15px;
-font-size:14px;
-opacity:0.85;
+font-size:13px;
+line-height:1.6;
+min-height:40px;
+}
+
+/* CODE DISPLAY */
+.code{
+margin-top:10px;
+padding:10px;
+border:1px dashed rgba(100,140,255,0.3);
+font-size:12px;
+color:#8fa7ff;
 }
 </style>
 </head>
@@ -102,93 +131,120 @@ opacity:0.85;
 
 <div class="overlay"></div>
 
-<div class="login-box">
-<div class="title">CLPD Secure Authentication</div>
-<div class="subtitle">Verify your identity using your Roblox account</div>
+<div class="terminal">
 
-<input id="username" placeholder="Roblox Username">
+<div class="header">
+<div class="header-left">
+<img src="CLPD.png">
+<div class="title">CLPD AUTH TERMINAL</div>
+</div>
+<div class="status">SECURE SESSION</div>
+</div>
 
-<button onclick="login()">Authenticate</button>
+<input id="username" placeholder="ENTER USERNAME">
 
-<div class="result" id="result"></div>
+<button onclick="generateCode()">GENERATE VERIFICATION</button>
+
+<div class="code" id="codeBox"></div>
+
+<button onclick="verify()">VERIFY IDENTITY</button>
+
+<div class="output" id="output"></div>
+
 </div>
 
 <script>
-async function fetchWithTimeout(url, options={}, timeout=8000){
-return Promise.race([
-fetch(url, options),
-new Promise((_, reject)=>
-setTimeout(()=>reject(new Error("Timeout")), timeout)
-)
-]);
-}
 
-async function login(){
+let verifyCode = "";
+let userId = null;
 
-const username = document.getElementById("username").value.trim();
-const result = document.getElementById("result");
+async function generateCode(){
+
+const username = document.getElementById("username").value;
+const output = document.getElementById("output");
 
 if(!username){
-result.innerText = "Please enter a valid username.";
+output.innerText = "ERROR: USERNAME REQUIRED";
 return;
 }
 
-result.innerText = "Verifying account...";
+output.innerText = "RESOLVING USER ID...";
 
-try {
-
-/* STEP 1: USER ID */
-const userRes = await fetchWithTimeout(
-"https://users.roblox.com/v1/usernames/users",
-{
+let res = await fetch("https://users.roblox.com/v1/usernames/users",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({usernames:[username]})
-}
-);
+});
 
-const userData = await userRes.json();
+let data = await res.json();
 
-if(!userData.data || !userData.data.length){
-result.innerText = "Account not found.";
+if(!data.data.length){
+output.innerText = "ERROR: USER NOT FOUND";
 return;
 }
 
-const userId = userData.data[0].id;
+userId = data.data[0].id;
 
-/* STEP 2: GROUP RANK */
-result.innerText = "Fetching rank...";
+/* GENERATE CODE */
+verifyCode = "CLPD-" + Math.floor(Math.random()*999999);
 
-const rankRes = await fetchWithTimeout(
-`https://groups.roproxy.com/v2/users/${userId}/groups/roles`
-);
+document.getElementById("codeBox").innerText =
+"> INSERT INTO ROBLOX BIO:\n" + verifyCode;
 
-const rankData = await rankRes.json();
+output.innerText = "CODE GENERATED. AWAITING VERIFICATION.";
+}
 
-const group = rankData.data.find(g=>g.group.id===342605681);
+async function verify(){
+
+const output = document.getElementById("output");
+
+if(!userId){
+output.innerText = "ERROR: GENERATE CODE FIRST";
+return;
+}
+
+output.innerText = "VERIFYING PROFILE...";
+
+try{
+
+let res = await fetch(`https://users.roproxy.com/v1/users/${userId}`);
+let data = await res.json();
+
+if(!data.description.includes(verifyCode)){
+output.innerText = "ERROR: VERIFICATION CODE NOT DETECTED";
+return;
+}
+
+/* GET RANK */
+output.innerText = "FETCHING RANK...";
+
+let rankRes = await fetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
+let rankData = await rankRes.json();
+
+let group = rankData.data.find(g=>g.group.id===342605681);
 
 if(!group){
-result.innerText = "User is not a member of CLPD.";
+output.innerText = "ACCESS DENIED: NOT CLPD";
 return;
 }
 
-const rank = group.role.name;
+let rank = group.role.name;
 
 /* SUCCESS */
-result.innerText = `${username} | Rank: ${rank}`;
+output.innerText =
+`ACCESS GRANTED\nUSER ID: ${userId}\nRANK: ${rank}`;
 
-/* DISCORD WEBHOOK */
-await fetch("https://discord.com/api/webhooks/1493055782500171856/CalFGzy3AwXi50_ByS3kFraKD_y2yK5uTRNmA7POsRHPQ2_XKy270GsswlM0Iw-oDh-C",{
+/* WEBHOOK */
+fetch("https://discord.com/api/webhooks/1493055782500171856/CalFGzy3AwXi50_ByS3kFraKD_y2yK5uTRNmA7POsRHPQ2_XKy270GsswlM0Iw-oDh-C",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-content:`🔐 CLPD Authentication\nUser: ${username}\nRank: ${rank}`
+content:`CLPD AUTH\nID: ${userId}\nRANK: ${rank}`
 })
 });
 
-} catch(err){
-console.error(err);
-result.innerText = "Authentication failed. Please try again.";
+}catch{
+output.innerText = "ERROR: NETWORK FAILURE";
 }
 
 }
