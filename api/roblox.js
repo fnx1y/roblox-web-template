@@ -1,53 +1,66 @@
 export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed." });
+  }
+
   try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ error: "Method not allowed" });
+    const { username } = req.body || {};
+
+    if (!username || typeof username !== "string") {
+      return res.status(400).json({ error: "A Roblox username is required." });
     }
 
-    const { username } = req.body;
+    const cleanUsername = username.trim();
 
-    if (!username) {
-      return res.status(400).json({ error: "Missing username" });
+    if (!cleanUsername) {
+      return res.status(400).json({ error: "A Roblox username is required." });
     }
 
-    // STEP 1: USER ID
-    const userRes = await fetch("https://users.roblox.com/v1/usernames/users", {
+    const userResponse = await fetch("https://users.roblox.com/v1/usernames/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        usernames: [username],
+        usernames: [cleanUsername],
         excludeBannedUsers: true
       })
     });
 
-    const userData = await userRes.json();
-
-    if (!userData.data || !userData.data.length) {
-      return res.status(404).json({ error: "User not found" });
+    if (!userResponse.ok) {
+      return res.status(502).json({ error: "Unable to resolve Roblox account." });
     }
 
-    const userId = userData.data[0].id;
+    const userData = await userResponse.json();
 
-    // STEP 2: GROUP RANK
-    const groupRes = await fetch(`https://groups.roblox.com/v2/users/${userId}/groups/roles`);
-    const groupData = await groupRes.json();
+    if (!userData.data || !userData.data.length) {
+      return res.status(404).json({ error: "Roblox user not found." });
+    }
 
-    const group = groupData.data.find(g => g.group.id === 342605681);
+    const user = userData.data[0];
+    const userId = user.id;
 
-    if (!group) {
-      return res.status(403).json({ error: "Not in CLPD" });
+    const groupsResponse = await fetch(`https://groups.roblox.com/v2/users/${userId}/groups/roles`);
+
+    if (!groupsResponse.ok) {
+      return res.status(502).json({ error: "Unable to load Roblox group roles." });
+    }
+
+    const groupData = await groupsResponse.json();
+    const membership = (groupData.data || []).find(
+      entry => entry.group && entry.group.id === 342605681
+    );
+
+    if (!membership) {
+      return res.status(403).json({ error: "Access denied. User is not in the CLPD Roblox group." });
     }
 
     return res.status(200).json({
-      username,
+      username: user.name,
       userId,
-      rank: group.role.name
+      rank: membership.role?.name || "Unknown Rank"
     });
-
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Server failure" });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error." });
   }
 }
