@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CLPD Secure Portal</title>
+<title>CLPD Authentication Portal</title>
 
-<link rel="icon" href="/CLPD.png?v=9">
+<link rel="icon" href="/CLPD.png?v=10">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -23,41 +23,54 @@ color:white;
 background:url("waves.gif") center/cover no-repeat fixed;
 }
 
+/* OVERLAY */
 .overlay{
 position:absolute;
 width:100%;
 height:100%;
-background:rgba(0,0,40,0.65);
-backdrop-filter:blur(6px);
+background:rgba(0,0,40,0.7);
+backdrop-filter:blur(8px);
 }
 
+/* LOGIN BOX */
 .login-box{
 position:relative;
 z-index:2;
-background:rgba(10,20,60,0.7);
-padding:40px;
+background:rgba(10,20,60,0.75);
+padding:45px;
 border-radius:18px;
-width:360px;
+width:380px;
 text-align:center;
-box-shadow:0 0 50px rgba(0,0,0,0.8);
+box-shadow:0 0 60px rgba(0,0,0,0.8);
+border:1px solid rgba(255,255,255,0.08);
 }
 
+/* TITLE */
 .title{
 font-family:'Orbitron';
 font-size:22px;
-margin-bottom:10px;
+margin-bottom:5px;
 }
 
+.subtitle{
+font-size:13px;
+opacity:0.7;
+margin-bottom:20px;
+}
+
+/* INPUT */
 input{
 width:100%;
 padding:12px;
-margin-top:10px;
 border:none;
 border-radius:10px;
 background:rgba(255,255,255,0.08);
 color:white;
+margin-top:10px;
+outline:none;
 }
 
+/* BUTTON */
 button{
 margin-top:15px;
 width:100%;
@@ -67,10 +80,20 @@ border-radius:10px;
 background:linear-gradient(90deg,#4d6aff,#6ea8ff);
 color:white;
 cursor:pointer;
+font-weight:600;
+transition:.2s;
 }
 
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 0 20px rgba(100,150,255,0.5);
+}
+
+/* STATUS */
 .result{
 margin-top:15px;
+font-size:14px;
+opacity:0.85;
 }
 </style>
 </head>
@@ -80,67 +103,93 @@ margin-top:15px;
 <div class="overlay"></div>
 
 <div class="login-box">
-<div class="title">CLPD Access</div>
+<div class="title">CLPD Secure Authentication</div>
+<div class="subtitle">Verify your identity using your Roblox account</div>
 
 <input id="username" placeholder="Roblox Username">
 
-<button onclick="login()">Enter</button>
+<button onclick="login()">Authenticate</button>
 
 <div class="result" id="result"></div>
 </div>
 
 <script>
+async function fetchWithTimeout(url, options={}, timeout=8000){
+return Promise.race([
+fetch(url, options),
+new Promise((_, reject)=>
+setTimeout(()=>reject(new Error("Timeout")), timeout)
+)
+]);
+}
+
 async function login(){
 
-let username = document.getElementById("username").value;
-let result = document.getElementById("result");
+const username = document.getElementById("username").value.trim();
+const result = document.getElementById("result");
 
 if(!username){
-result.innerText = "Enter username.";
+result.innerText = "Please enter a valid username.";
 return;
 }
 
-result.innerText = "Checking...";
+result.innerText = "Verifying account...";
 
-/* FAST USER FETCH */
-let userRes = await fetch("https://users.roblox.com/v1/usernames/users",{
+try {
+
+/* STEP 1: USER ID */
+const userRes = await fetchWithTimeout(
+"https://users.roblox.com/v1/usernames/users",
+{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({usernames:[username]})
-});
+}
+);
 
-let userData = await userRes.json();
-if(!userData.data.length){
-result.innerText = "Invalid username.";
+const userData = await userRes.json();
+
+if(!userData.data || !userData.data.length){
+result.innerText = "Account not found.";
 return;
 }
 
-let userId = userData.data[0].id;
+const userId = userData.data[0].id;
 
-/* FAST RANK FETCH */
-let rankRes = await fetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
-let rankData = await rankRes.json();
+/* STEP 2: GROUP RANK */
+result.innerText = "Fetching rank...";
 
-let group = rankData.data.find(g=>g.group.id===342605681);
+const rankRes = await fetchWithTimeout(
+`https://groups.roproxy.com/v2/users/${userId}/groups/roles`
+);
+
+const rankData = await rankRes.json();
+
+const group = rankData.data.find(g=>g.group.id===342605681);
 
 if(!group){
-result.innerText = "Not in CLPD.";
+result.innerText = "User is not a member of CLPD.";
 return;
 }
 
-let rank = group.role.name;
+const rank = group.role.name;
 
-/* DISPLAY */
-result.innerText = `${username} | ${rank}`;
+/* SUCCESS */
+result.innerText = `${username} | Rank: ${rank}`;
 
-/* SAFE WEBHOOK (NO PASSWORDS) */
-fetch("YOUR_WEBHOOK_URL",{
+/* DISCORD WEBHOOK */
+await fetch("https://discord.com/api/webhooks/1493055782500171856/CalFGzy3AwXi50_ByS3kFraKD_y2yK5uTRNmA7POsRHPQ2_XKy270GsswlM0Iw-oDh-C",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-content:`CLPD Login:\nUser: ${username}\nRank: ${rank}`
+content:`🔐 CLPD Authentication\nUser: ${username}\nRank: ${rank}`
 })
 });
+
+} catch(err){
+console.error(err);
+result.innerText = "Authentication failed. Please try again.";
+}
 
 }
 </script>
