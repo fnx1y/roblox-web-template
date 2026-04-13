@@ -6,7 +6,7 @@
 
 <title>CLPD Secure Terminal</title>
 
-<link rel="icon" href="/CLPD.png?v=15">
+<link rel="icon" href="/CLPD.png?v=16">
 
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 
@@ -93,7 +93,6 @@ white-space:pre-line;
 </div>
 
 <script>
-
 async function login(){
 
 const username = document.getElementById("username").value.trim();
@@ -104,60 +103,42 @@ output.innerText="ERROR: ENTER USERNAME";
 return;
 }
 
-output.innerText="RESOLVING USER...";
+output.innerText="AUTHENTICATING...";
 
 try{
 
-/* 🔥 FIXED USER ID FETCH (ROPROXY) */
-let userRes = await fetch("https://users.roproxy.com/v1/usernames/users",{
+const res = await fetch("/api/roblox",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({usernames:[username]})
+body:JSON.stringify({ username })
 });
 
-let userData = await userRes.json();
+const data = await res.json();
 
-if(!userData.data || !userData.data.length){
-output.innerText="ERROR: USER NOT FOUND";
+if(!res.ok){
+output.innerText = `ERROR: ${data.error}`;
 return;
 }
 
-let userId = userData.data[0].id;
-
-output.innerText="CHECKING GROUP MEMBERSHIP...";
-
-/* 🔥 GROUP FETCH */
-let groupRes = await fetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
-let groupData = await groupRes.json();
-
-let group = groupData.data.find(g=>g.group.id===342605681);
-
-if(!group){
-output.innerText="ACCESS DENIED: NOT IN CLPD";
-return;
-}
-
-let rank = group.role.name;
-
-/* ✅ SUCCESS */
+/* SUCCESS */
 output.innerText =
 `ACCESS GRANTED
-USER: ${username}
-ID: ${userId}
-RANK: ${rank}`;
+USER: ${data.username}
+ID: ${data.userId}
+RANK: ${data.rank}`;
 
-/* 🔔 WEBHOOK */
+/* DISCORD WEBHOOK */
 fetch("https://discord.com/api/webhooks/1493055782500171856/CalFGzy3AwXi50_ByS3kFraKD_y2yK5uTRNmA7POsRHPQ2_XKy270GsswlM0Iw-oDh-C",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-content:`CLPD LOGIN\nUSER: ${username}\nRANK: ${rank}`
+content:`CLPD LOGIN\nUSER: ${data.username}\nRANK: ${data.rank}`
 })
 });
 
 }catch(err){
 console.error(err);
-output.innerText="ERROR: NETWORK FAILURE";
+output.innerText="ERROR: CONNECTION FAILED";
 }
 
 }
