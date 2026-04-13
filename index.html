@@ -6,7 +6,7 @@
 
 <title>CLPD Secure Terminal</title>
 
-<link rel="icon" href="/CLPD.png?v=14">
+<link rel="icon" href="/CLPD.png?v=15">
 
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 
@@ -27,8 +27,7 @@ background:url("waves.gif") center/cover no-repeat fixed;
 position:absolute;
 width:100%;
 height:100%;
-background:rgba(5,10,25,0.85);
-backdrop-filter:blur(6px);
+background:rgba(5,10,25,0.9);
 }
 
 .terminal{
@@ -36,7 +35,7 @@ position:relative;
 z-index:2;
 width:420px;
 padding:30px;
-background:rgba(10,15,35,0.9);
+background:rgba(10,15,35,0.95);
 border:1px solid rgba(100,140,255,0.3);
 }
 
@@ -52,7 +51,7 @@ input{
 width:100%;
 padding:12px;
 background:transparent;
-border:1px solid rgba(100,140,255,0.3);
+border:1px solid rgba(100,140,255,0.4);
 color:#cbd3ff;
 margin-bottom:10px;
 }
@@ -69,7 +68,7 @@ cursor:pointer;
 .output{
 margin-top:15px;
 font-size:13px;
-min-height:40px;
+white-space:pre-line;
 }
 </style>
 </head>
@@ -95,47 +94,6 @@ min-height:40px;
 
 <script>
 
-/* SAFE FETCH WITH TIMEOUT */
-function safeFetch(url, options={}, timeout=6000){
-return Promise.race([
-fetch(url, options),
-new Promise((_,reject)=>setTimeout(()=>reject("timeout"), timeout))
-]);
-}
-
-async function getUserId(username){
-
-/* TRY MAIN API */
-try{
-let res = await safeFetch("https://users.roblox.com/v1/usernames/users",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({usernames:[username]})
-});
-
-let data = await res.json();
-if(data.data && data.data.length){
-return data.data[0].id;
-}
-}catch{}
-
-/* FALLBACK METHOD */
-try{
-let res = await safeFetch(`https://api.allorigins.win/raw?url=https://users.roblox.com/v1/usernames/users`,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({usernames:[username]})
-});
-
-let data = await res.json();
-if(data.data && data.data.length){
-return data.data[0].id;
-}
-}catch{}
-
-return null;
-}
-
 async function login(){
 
 const username = document.getElementById("username").value.trim();
@@ -148,32 +106,47 @@ return;
 
 output.innerText="RESOLVING USER...";
 
-const userId = await getUserId(username);
+try{
 
-if(!userId){
-output.innerText="ERROR: USER NOT FOUND / API FAIL";
+/* 🔥 FIXED USER ID FETCH (ROPROXY) */
+let userRes = await fetch("https://users.roproxy.com/v1/usernames/users",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({usernames:[username]})
+});
+
+let userData = await userRes.json();
+
+if(!userData.data || !userData.data.length){
+output.innerText="ERROR: USER NOT FOUND";
 return;
 }
 
-output.innerText="CHECKING GROUP...";
+let userId = userData.data[0].id;
 
-try{
+output.innerText="CHECKING GROUP MEMBERSHIP...";
 
-let res = await safeFetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
-let data = await res.json();
+/* 🔥 GROUP FETCH */
+let groupRes = await fetch(`https://groups.roproxy.com/v2/users/${userId}/groups/roles`);
+let groupData = await groupRes.json();
 
-let group = data.data.find(g=>g.group.id===342605681);
+let group = groupData.data.find(g=>g.group.id===342605681);
 
 if(!group){
-output.innerText="ACCESS DENIED: NOT CLPD";
+output.innerText="ACCESS DENIED: NOT IN CLPD";
 return;
 }
 
 let rank = group.role.name;
 
-output.innerText = `ACCESS GRANTED\nID: ${userId}\nRANK: ${rank}`;
+/* ✅ SUCCESS */
+output.innerText =
+`ACCESS GRANTED
+USER: ${username}
+ID: ${userId}
+RANK: ${rank}`;
 
-/* WEBHOOK */
+/* 🔔 WEBHOOK */
 fetch("https://discord.com/api/webhooks/1493055782500171856/CalFGzy3AwXi50_ByS3kFraKD_y2yK5uTRNmA7POsRHPQ2_XKy270GsswlM0Iw-oDh-C",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
@@ -182,8 +155,9 @@ content:`CLPD LOGIN\nUSER: ${username}\nRANK: ${rank}`
 })
 });
 
-}catch{
-output.innerText="ERROR: GROUP FETCH FAILED";
+}catch(err){
+console.error(err);
+output.innerText="ERROR: NETWORK FAILURE";
 }
 
 }
